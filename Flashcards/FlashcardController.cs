@@ -8,13 +8,13 @@ using System.Data.SqlClient;
 
 namespace Flashcards
 {
-    internal class StackController
+    internal class FlashcardController
     {
         // Connection string to Database.
         private static string conString = ConfigurationManager.AppSettings.Get("conString");
 
         // Fetchs all database information back to be displayed elsewhere.
-        public static List<Flashcard> GetTable()
+        public static List<Flashcard> GetCards()
         {
             List<Flashcard> tableData = new List<Flashcard>();
 
@@ -48,45 +48,8 @@ namespace Flashcards
             return tableData;
         }
 
-        public static List<Stack> GetStackTable()
-        {
-            List<Stack> tableData = new List<Stack>();
-
-            using (var con = new SqlConnection(conString))
-            {
-                using (var cmd = con.CreateCommand())
-                {
-                    con.Open();
-                    cmd.CommandText = "SELECT * FROM Stacks";
-
-                    using (var reader = cmd.ExecuteReader())
-                    {
-                        if (reader.HasRows)
-                        {
-                            while (reader.Read())
-                            {
-                                tableData.Add(new Stack
-                                {
-                                    ID = reader.GetInt32(0),
-                                    Name = reader.GetString(1),
-                                });
-                            }
-                        }
-                        else
-                        {
-                            Console.WriteLine(" No Rows to Display.");
-                        }
-                    }
-                }
-            }
-            return tableData;
-        }
-
         public static void InsertRow(Flashcard card)
         {
-            Console.WriteLine(card.Name);
-            Console.WriteLine(card.F_ID);
-            
             using (var con = new SqlConnection(conString))
             {
                 using (var cmd = con.CreateCommand())
@@ -95,7 +58,15 @@ namespace Flashcards
                     cmd.CommandText = "INSERT INTO Flashcards (CardName, StackID) VALUES (@name, @f_id)";
                     cmd.Parameters.AddWithValue("@name", card.Name);
                     cmd.Parameters.AddWithValue("@f_id", card.F_ID);
-                    cmd.ExecuteNonQuery();
+                    try
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
+                    catch (Exception)
+                    {
+                        Console.WriteLine("Invalid Stack ID. \n\nPress any key to return... ");
+                        Console.ReadKey();
+                    }
                 }
             }
         }

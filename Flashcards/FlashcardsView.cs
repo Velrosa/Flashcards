@@ -15,18 +15,18 @@ namespace Flashcards
         {
             Console.Clear();
 
-            Console.WriteLine("\n Displaying all session records:\n");
+            Console.WriteLine("\n Displaying all records:\n");
 
-            if (selector == "5")
+            if (selector == "1")
             {
-                ConsoleTableBuilder.From(StackController.GetStackTable()).ExportAndWriteLine();
+                ConsoleTableBuilder.From(FlashcardController.GetCards()).ExportAndWriteLine();
             }
-            else if (selector == "1")
+            else if (selector == "2")
             {
-                ConsoleTableBuilder.From(StackController.GetTable()).ExportAndWriteLine();
+                ConsoleTableBuilder.From(StacksController.GetStack()).ExportAndWriteLine();
             }
 
-            if (selector == "1" || selector == "5")
+            if (selector == "1" || selector == "2")
             {
                 Console.Write("\n Press any key to return to menu... ");
                 Console.ReadKey();
@@ -34,19 +34,34 @@ namespace Flashcards
         }
         public static void InsertView(string selector)
         {
-            Flashcard card = new Flashcard();
+            if (selector == "1")
+            {
+                Flashcard card = new Flashcard();
 
-            Console.WriteLine("\n Adding a new Flashcard...   \n Type MENU to return.");
+                Console.WriteLine("\n Adding a new Flashcard...   \n Type MENU to return.");
 
-            Console.Write("\n Please Enter the Flashcard text: ");
-            card.Name = Validation.Validate(Console.ReadLine(), "text");
-            if (card.Name == "MENU") { return; }
+                Console.Write("\n Please Enter the Flashcard text: ");
+                card.Name = Validation.Validate(Console.ReadLine(), "text");
+                if (card.Name == "MENU") { return; }
 
-            Console.Write("\n Please Enter the Stack ID this card belongs to: ");
-            string entryId = Validation.Validate(Console.ReadLine(), "id");
-            if (entryId == "MENU") { return; } else { card.F_ID = Convert.ToInt32(entryId); }
+                Console.Write("\n Please Enter the Stack ID this card belongs to: ");
+                string entryId = Validation.Validate(Console.ReadLine(), "id");
+                if (entryId == "MENU") { return; } else { card.F_ID = Convert.ToInt32(entryId); }
 
-            StackController.InsertRow(card);
+                FlashcardController.InsertRow(card);
+            }
+            else if (selector == "2")
+            {
+                Stack stack = new Stack();
+
+                Console.WriteLine("\n Adding a new Stack...   \n Type MENU to return.");
+
+                Console.Write("\n Please Enter the Stack title: ");
+                stack.Name = Validation.Validate(Console.ReadLine(), "text");
+                if (stack.Name == "MENU") { return; }
+
+                StacksController.InsertRow(stack);
+            }
         }
     }
 }
