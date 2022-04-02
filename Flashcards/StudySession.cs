@@ -17,11 +17,10 @@ namespace Flashcards
             int cardTotal = cards.Count();
 
             Console.Clear();
-            Console.WriteLine("Studying the Stack {0}", "Beginners");
             
             foreach (Flashcard card in cards)
             {
-                Console.WriteLine("\n Viewing card {0} of {1}", cardNum, cardTotal);
+                Console.WriteLine("\n Viewing card {0} of {1} from Stack {2}", cardNum, cardTotal, card.StackName);
                 Console.Write("\n {0}: ", card.Question);
                 string answer = Console.ReadLine();
                 if (answer == card.Answer)

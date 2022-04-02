@@ -48,13 +48,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\Flashcard.cs" />
+    <Compile Include="Models\FlashcardDTO.cs" />
     <Compile Include="StudySession.cs" />
     <Compile Include="Views.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Models\Stack.cs" />
-    <Compile Include="Controllers\FlashcardController.cs" />
-    <Compile Include="Controllers\StacksController.cs" />
+    <Compile Include="FlashcardController.cs" />
     <Compile Include="Validation.cs" />
   </ItemGroup>
   <ItemGroup>
