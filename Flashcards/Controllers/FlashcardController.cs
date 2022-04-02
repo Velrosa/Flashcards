@@ -80,11 +80,20 @@ namespace Flashcards
                 using (var cmd = con.CreateCommand())
                 {
                     con.Open();
-                    cmd.CommandText = "UPDATE Flashcards SET CardQuestion=(@question), CardAnswer=(@answer) WHERE CardID=(@id) ";
+                    cmd.CommandText = "UPDATE Flashcards SET CardQuestion=(@question), CardAnswer=(@answer), StackID=(@f_id) WHERE CardID=(@id) ";
                     cmd.Parameters.AddWithValue("@id", card.ID);
                     cmd.Parameters.AddWithValue("@question", card.Question);
                     cmd.Parameters.AddWithValue("@answer", card.Answer);
-                    cmd.ExecuteNonQuery();
+                    cmd.Parameters.AddWithValue("@f_id", card.F_ID);
+                    try
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
+                    catch (Exception)
+                    {
+                        Console.WriteLine("\nInvalid Stack ID. \n\nPress any key to return... ");
+                        Console.ReadKey();
+                    }
                 }
             }
         }

@@ -66,14 +66,16 @@ namespace Flashcards
             {
                 case "0":
                     Environment.Exit(0);
-                    break;
-                
+                    break;                
                 case "1":
                     SubMenu("card");
                     break;
                 case "2":
                     SubMenu("stack");
-                    break;                
+                    break;
+                case "3":
+                    StudySession.Session();
+                    break;
                 default:
                     Console.Write(" Invalid Entry. press any key to return... ");
                     Console.ReadKey();

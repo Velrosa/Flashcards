@@ -9,7 +9,6 @@ namespace Flashcards
 {
     internal class Views
     {
-
         // Displays a table with all the current records in.
         public static void ShowTable(string type, bool pause)
         {
@@ -34,13 +33,14 @@ namespace Flashcards
         }
         public static void InsertView(string type)
         {
+            Console.WriteLine("\n Adding a new {0}...   \n Type MENU to return.", type);
+
             if (type == "card")
             {
                 Flashcard card = new Flashcard();
 
                 ShowTable("stack", false);
-                Console.WriteLine("\n Adding a new Flashcard...   \n Type MENU to return.");
-
+   
                 Console.Write("\n Please Enter the Stack ID this card belongs to: ");
                 string entryId = Validation.Validate(Console.ReadLine(), "id");
                 if (entryId == "MENU") { return; } else { card.F_ID = Convert.ToInt32(entryId); }
@@ -59,8 +59,6 @@ namespace Flashcards
             {
                 Stack stack = new Stack();
 
-                Console.WriteLine("\n Adding a new Stack...   \n Type MENU to return.");
-
                 Console.Write("\n Please Enter the Stack title: ");
                 stack.Name = Validation.Validate(Console.ReadLine(), "text");
                 if (stack.Name == "MENU") { return; }
@@ -70,17 +68,28 @@ namespace Flashcards
         }
         public static void UpdateView(string type)
         {
+            ShowTable(type, false);
+
+            Console.WriteLine("\n Updating a {0}...  \n Type MENU to return.", type);
+            
+            Console.Write("\n Please Enter the ID of the {0} to change: ", type);
+            string entryId = Validation.Validate(Console.ReadLine(), "id");
+            
+            if (entryId == "MENU") { return; }
+
             if (type == "card")
             {
                 Flashcard card = new Flashcard();
+                card.ID = Convert.ToInt32(entryId);
+
+                ShowTable("stack", false);
+
+                Console.Write("\n Please Enter the Stack ID this card belongs to: ");
+                string foreignID = Validation.Validate(Console.ReadLine(), "id");
+                if (foreignID == "MENU") { return; } else { card.F_ID = Convert.ToInt32(foreignID); }
 
                 ShowTable("card", false);
-
-                Console.WriteLine("\n Updating a Flashcard...  \n Type MENU to return.");
-
-                Console.Write("\n Please Enter the ID of the Card to change: ");
-                string entryId = Validation.Validate(Console.ReadLine(), "id");
-                if (entryId == "MENU") { return; } else { card.ID = Convert.ToInt32(entryId); }
+                Console.WriteLine(" CardID being edited {0}, StackID it belongs to {1}", entryId, foreignID);
 
                 Console.Write("\n Please Enter the new Card question: ");
                 card.Question = Validation.Validate(Console.ReadLine(), "text");
@@ -95,14 +104,7 @@ namespace Flashcards
             else if (type == "stack")
             {
                 Stack stack = new Stack();
-
-                ShowTable("stack", false);
-
-                Console.WriteLine("\n Updating a Stack...  \n Type MENU to return.");
-
-                Console.Write("\n Please Enter the ID of the Stack to change: ");
-                string entryId = Validation.Validate(Console.ReadLine(), "id");
-                if (entryId == "MENU") { return; } else { stack.ID = Convert.ToInt32(entryId); }
+                stack.ID = Convert.ToInt32(entryId);
 
                 Console.Write("\n Please Enter the new Stack title: ");
                 stack.Name = Validation.Validate(Console.ReadLine(), "text");
@@ -117,7 +119,7 @@ namespace Flashcards
             ShowTable(type, false);
 
             Console.WriteLine("\n Deleting a {0}...  \n Type MENU to return.", type);
-            Console.Write("\n Enter ID for {0} to delete: ", type);
+            Console.Write("\n Enter ID of the {0} to delete: ", type);
             string entryId = Validation.Validate(Console.ReadLine(), "id");
 
             if (entryId == "MENU") { return; }
