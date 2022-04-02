@@ -21,7 +21,7 @@ namespace Flashcards
             
             foreach (Flashcard card in cards)
             {
-                Console.WriteLine("Viewing card {0} of {1}", cardNum, cardTotal);
+                Console.WriteLine("\n Viewing card {0} of {1}", cardNum, cardTotal);
                 Console.Write("\n {0}: ", card.Question);
                 string answer = Console.ReadLine();
                 if (answer == card.Answer)
@@ -33,9 +33,10 @@ namespace Flashcards
                 {
                     Console.WriteLine(" Incorrect. The answer was... {0}", card.Answer);
                 }
+                cardNum++;
             }
             Console.WriteLine("\n You scored {0} points out of {1}. \n\n Press any key to return... ", score, cardTotal);
-            Console.ReadLine();
+            Console.ReadKey();
         }
     }
 }

@@ -39,12 +39,6 @@ namespace Flashcards
             {
                 Flashcard card = new Flashcard();
 
-                ShowTable("stack", false);
-   
-                Console.Write("\n Please Enter the Stack ID this card belongs to: ");
-                string entryId = Validation.Validate(Console.ReadLine(), "id");
-                if (entryId == "MENU") { return; } else { card.F_ID = Convert.ToInt32(entryId); }
-
                 Console.Write("\n Please Enter the Flashcard question: ");
                 card.Question = Validation.Validate(Console.ReadLine(), "text");
                 if (card.Question == "MENU") { return; }
@@ -52,6 +46,12 @@ namespace Flashcards
                 Console.Write("\n Please Enter the Flashcard answer: ");
                 card.Answer = Validation.Validate(Console.ReadLine(), "text");
                 if (card.Answer == "MENU") { return; }
+
+                ShowTable("stack", false);
+
+                Console.Write("\n Please Enter the Stack Name this card belongs to: ");
+                card.StackName = Validation.Validate(Console.ReadLine(), "text");
+                if (card.StackName == "MENU") { return; }
 
                 FlashcardController.InsertRow(card);
             }
@@ -72,24 +72,23 @@ namespace Flashcards
 
             Console.WriteLine("\n Updating a {0}...  \n Type MENU to return.", type);
             
-            Console.Write("\n Please Enter the ID of the {0} to change: ", type);
-            string entryId = Validation.Validate(Console.ReadLine(), "id");
-            
-            if (entryId == "MENU") { return; }
-
             if (type == "card")
             {
                 Flashcard card = new Flashcard();
-                card.ID = Convert.ToInt32(entryId);
+
+                Console.Write("\n Please Enter the ID of the {0} to change: ", type);
+                string entryId = Validation.Validate(Console.ReadLine(), "id");
+                if (entryId == "MENU") { return; } else { card.ID = Convert.ToInt32(entryId); }
 
                 ShowTable("stack", false);
 
-                Console.Write("\n Please Enter the Stack ID this card belongs to: ");
-                string foreignID = Validation.Validate(Console.ReadLine(), "id");
-                if (foreignID == "MENU") { return; } else { card.F_ID = Convert.ToInt32(foreignID); }
+                Console.Write("\n Please Enter the StackName this card belongs to: ");
+                card.StackName = Validation.Validate(Console.ReadLine(), "text");
+                if (card.StackName == "MENU") { return; }
 
-                ShowTable("card", false);
-                Console.WriteLine(" CardID being edited {0}, StackID it belongs to {1}", entryId, foreignID);
+                ShowTable(type, false);
+                
+                Console.WriteLine(" CardID being edited {0}, StackName it belongs to {1}", entryId, card.StackName);
 
                 Console.Write("\n Please Enter the new Card question: ");
                 card.Question = Validation.Validate(Console.ReadLine(), "text");
@@ -104,11 +103,13 @@ namespace Flashcards
             else if (type == "stack")
             {
                 Stack stack = new Stack();
-                stack.ID = Convert.ToInt32(entryId);
-
-                Console.Write("\n Please Enter the new Stack title: ");
+                Console.Write("\n Please Enter the Stack Name you wish to change: ");
                 stack.Name = Validation.Validate(Console.ReadLine(), "text");
                 if (stack.Name == "MENU") { return; }
+
+                Console.Write("\n Please Enter the new Stack Name: ");
+                stack.NewName = Validation.Validate(Console.ReadLine(), "text");
+                if (stack.NewName == "MENU") { return; }
 
                 StacksController.UpdateRow(stack);
             }
@@ -119,24 +120,23 @@ namespace Flashcards
             ShowTable(type, false);
 
             Console.WriteLine("\n Deleting a {0}...  \n Type MENU to return.", type);
-            Console.Write("\n Enter ID of the {0} to delete: ", type);
-            string entryId = Validation.Validate(Console.ReadLine(), "id");
 
-            if (entryId == "MENU") { return; }
-            else
+
+            if (type == "card")
             {
-                if (type == "card")
-                {
-                    Flashcard card = new Flashcard();
-                    card.ID = Convert.ToInt32(entryId);
-                    FlashcardController.DeleteRow(card);
-                }
-                else if (type == "stack")
-                {
-                    Stack stack = new Stack();
-                    stack.ID = Convert.ToInt32(entryId);
-                    StacksController.DeleteRow(stack);
-                }
+                Flashcard card = new Flashcard();
+                Console.Write("\n Enter ID of the {0} to delete: ", type);
+                string entryId = Validation.Validate(Console.ReadLine(), "id");
+                if (entryId == "MENU") { return; } else { card.ID = Convert.ToInt32(entryId); }
+                FlashcardController.DeleteRow(card);
+            }
+            else if (type == "stack")
+            {
+                Stack stack = new Stack();
+                Console.Write("\n Enter the name of the {0} to delete: ", type);
+                stack.Name = Validation.Validate(Console.ReadLine(), "text");
+                if (stack.Name == "MENU") { return; }
+                StacksController.DeleteRow(stack);
             }
         }
     }

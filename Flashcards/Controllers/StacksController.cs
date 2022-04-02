@@ -32,8 +32,7 @@ namespace Flashcards
                             {
                                 tableData.Add(new Stack
                                 {
-                                    ID = reader.GetInt32(0),
-                                    Name = reader.GetString(1),
+                                    Name = reader.GetString(0)
                                 });
                             }
                         }
@@ -56,7 +55,15 @@ namespace Flashcards
                     con.Open();
                     cmd.CommandText = "INSERT INTO Stacks (StackName) VALUES (@name)";
                     cmd.Parameters.AddWithValue("@name", stack.Name);
-                    cmd.ExecuteNonQuery();
+                    try
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
+                    catch (Exception)
+                    {
+                        Console.WriteLine("\nStack Name already exists. \n\nPress any key to return... ");
+                        Console.ReadKey();
+                    }
                 }
             }
         }
@@ -67,9 +74,9 @@ namespace Flashcards
                 using (var cmd = con.CreateCommand())
                 {
                     con.Open();
-                    cmd.CommandText = "UPDATE Stacks SET StackName=(@stackname) WHERE StackID=(@id) ";
-                    cmd.Parameters.AddWithValue("@id", stack.ID);
-                    cmd.Parameters.AddWithValue("@stackname", stack.Name);
+                    cmd.CommandText = "UPDATE Stacks SET StackName=(@newName) WHERE StackName=(@stackName) ";
+                    cmd.Parameters.AddWithValue("@stackName", stack.Name);
+                    cmd.Parameters.AddWithValue("@newName", stack.NewName);
                     cmd.ExecuteNonQuery();
                 }
             }
@@ -81,8 +88,8 @@ namespace Flashcards
                 using (var cmd = con.CreateCommand())
                 {
                     con.Open();
-                    cmd.CommandText = "DELETE FROM Stacks WHERE StackID=(@Id)";
-                    cmd.Parameters.AddWithValue("@Id", stack.ID);
+                    cmd.CommandText = "DELETE FROM Stacks WHERE StackName=(@stackName)";
+                    cmd.Parameters.AddWithValue("@stackName", stack.Name);
                     cmd.ExecuteNonQuery();
                 }
             }

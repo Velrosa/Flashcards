@@ -20,8 +20,7 @@ namespace Flashcards
                     con.Open();
                     cmd.CommandText = "IF NOT EXISTS (SELECT * FROM sysobjects WHERE id = object_id(N'[dbo].[Stacks]')" +
                                             "AND OBJECTPROPERTY(id, N'IsUserTable') = 1)" +
-                                            "CREATE TABLE[dbo].[Stacks] (StackID INT IDENTITY(1,1) PRIMARY KEY," +
-                                                                        "StackName TEXT);";
+                                            "CREATE TABLE[dbo].[Stacks] (StackName VARCHAR(50) UNIQUE);"; //StackID INT IDENTITY(1,1) PRIMARY KEY,
                     cmd.ExecuteNonQuery();
                 }
             }
@@ -36,7 +35,7 @@ namespace Flashcards
                                             "CREATE TABLE[dbo].[Flashcards] (CardID INT IDENTITY(1,1) PRIMARY KEY," +
                                                                             "CardQuestion TEXT," +
                                                                             "CardAnswer TEXT," +
-                                                                            "StackID INT FOREIGN KEY REFERENCES Stacks(StackID) " +
+                                                                            "StackName VARCHAR(50) FOREIGN KEY REFERENCES Stacks(StackName) " +
                                                                             "ON DELETE CASCADE ON UPDATE CASCADE);";
                     cmd.ExecuteNonQuery();
                 }
@@ -75,6 +74,8 @@ namespace Flashcards
                     break;
                 case "3":
                     StudySession.Session();
+                    break;
+                case "4":
                     break;
                 default:
                     Console.Write(" Invalid Entry. press any key to return... ");

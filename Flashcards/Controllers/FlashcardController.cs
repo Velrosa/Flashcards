@@ -36,7 +36,7 @@ namespace Flashcards
                                     ID = reader.GetInt32(0),
                                     Question = reader.GetString(1),
                                     Answer = reader.GetString(2),
-                                    F_ID = reader.GetInt32(3)
+                                    StackName = reader.GetString(3)
                                 });
                             }
                         }
@@ -57,10 +57,10 @@ namespace Flashcards
                 using (var cmd = con.CreateCommand())
                 {
                     con.Open();
-                    cmd.CommandText = "INSERT INTO Flashcards (CardQuestion, CardAnswer, StackID) VALUES (@question, @answer, @f_id)";
+                    cmd.CommandText = "INSERT INTO Flashcards (CardQuestion, CardAnswer, StackName) VALUES (@question, @answer, @stackname)";
                     cmd.Parameters.AddWithValue("@question", card.Question);
                     cmd.Parameters.AddWithValue("@answer", card.Answer);
-                    cmd.Parameters.AddWithValue("@f_id", card.F_ID);
+                    cmd.Parameters.AddWithValue("@stackname", card.StackName);
                     try
                     {
                         cmd.ExecuteNonQuery();
@@ -80,11 +80,11 @@ namespace Flashcards
                 using (var cmd = con.CreateCommand())
                 {
                     con.Open();
-                    cmd.CommandText = "UPDATE Flashcards SET CardQuestion=(@question), CardAnswer=(@answer), StackID=(@f_id) WHERE CardID=(@id) ";
+                    cmd.CommandText = "UPDATE Flashcards SET CardQuestion=(@question), CardAnswer=(@answer), StackName=(@stackName) WHERE CardID=(@id) ";
                     cmd.Parameters.AddWithValue("@id", card.ID);
                     cmd.Parameters.AddWithValue("@question", card.Question);
                     cmd.Parameters.AddWithValue("@answer", card.Answer);
-                    cmd.Parameters.AddWithValue("@f_id", card.F_ID);
+                    cmd.Parameters.AddWithValue("@stackName", card.StackName);
                     try
                     {
                         cmd.ExecuteNonQuery();

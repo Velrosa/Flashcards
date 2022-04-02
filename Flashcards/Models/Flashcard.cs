@@ -13,6 +13,6 @@ namespace Flashcards
 
         public string Answer { get; set; }
 
-        public int F_ID { get; set; }
+        public string StackName { get; set; }
     }
 }
