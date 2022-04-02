@@ -16,5 +16,9 @@ namespace Flashcards.Models
         public string StackName { get; set; }
 
         public string NewName { get; set; }
+
+        public string Score { get; set; }
+
+        public string Date { get; set; }
     }
 }

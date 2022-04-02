@@ -20,23 +20,25 @@ namespace Flashcards
                     con.Open();
                     cmd.CommandText = "IF NOT EXISTS (SELECT * FROM sysobjects WHERE id = object_id(N'[dbo].[Stacks]')" +
                                             "AND OBJECTPROPERTY(id, N'IsUserTable') = 1)" +
-                                            "CREATE TABLE[dbo].[Stacks] (StackName VARCHAR(50) UNIQUE);"; //StackID INT IDENTITY(1,1) PRIMARY KEY,
+                                            "CREATE TABLE[dbo].[Stacks] (StackName VARCHAR(50) UNIQUE);";
                     cmd.ExecuteNonQuery();
-                }
-            }
-
-            using (var con = new SqlConnection(conString))
-            {
-                using (var cmd = con.CreateCommand())
-                {
-                    con.Open();
                     cmd.CommandText = "IF NOT EXISTS (SELECT * FROM sysobjects WHERE id = object_id(N'[dbo].[Flashcards]')" +
-                                            "AND OBJECTPROPERTY(id, N'IsUserTable') = 1)" +
-                                            "CREATE TABLE[dbo].[Flashcards] (CardID INT IDENTITY(1,1) PRIMARY KEY," +
-                                                                            "CardQuestion TEXT," +
-                                                                            "CardAnswer TEXT," +
-                                                                            "StackName VARCHAR(50) FOREIGN KEY REFERENCES Stacks(StackName) " +
-                                                                            "ON DELETE CASCADE ON UPDATE CASCADE);";
+                                        "AND OBJECTPROPERTY(id, N'IsUserTable') = 1)" +
+                                        "CREATE TABLE[dbo].[Flashcards] (" +
+                                        "CardID INT IDENTITY(1,1) PRIMARY KEY," +
+                                        "CardQuestion TEXT," +
+                                        "CardAnswer TEXT," +
+                                        "StackName VARCHAR(50) FOREIGN KEY REFERENCES Stacks(StackName) " +
+                                        "ON DELETE CASCADE ON UPDATE CASCADE);";
+                    cmd.ExecuteNonQuery();
+                    cmd.CommandText = "IF NOT EXISTS (SELECT * FROM sysobjects WHERE id = object_id(N'[dbo].[Sessions]')" +
+                                        "AND OBJECTPROPERTY(id, N'IsUserTable') = 1)" +
+                                        "CREATE TABLE[dbo].[Sessions] (" +
+                                        "ID INT IDENTITY(1,1) PRIMARY KEY," +
+                                        "Date TEXT," +
+                                        "Score TEXT," +
+                                        "StackName VARCHAR(50) FOREIGN KEY REFERENCES Stacks(StackName) " +
+                                        "ON DELETE CASCADE ON UPDATE CASCADE);";
                     cmd.ExecuteNonQuery();
                 }
             }
@@ -56,7 +58,9 @@ namespace Flashcards
                                 " Type 0 to Close Application.\n" +
                                 " Type 1 to Edit Flashcards.\n" +
                                 " Type 2 to Edit Stacks.\n" +
-                                " Type 3 to Begin a Study Session.\n");
+                                " Type 3 to Begin a Study Session.\n" +
+                                " Type 4 to Display Previous Sessions.\n" +
+                                " Type 5 to Remove a Session.\n");
 
             // Users selection from the Menu.
             string selector = Convert.ToString(Console.ReadKey(true).KeyChar);
@@ -76,6 +80,10 @@ namespace Flashcards
                     StudySession.Session();
                     break;
                 case "4":
+                    Views.ShowTable("session", true);
+                    break;
+                case "5":
+                    Views.DeleteView("session");
                     break;
                 default:
                     Console.Write(" Invalid Entry. press any key to return... ");

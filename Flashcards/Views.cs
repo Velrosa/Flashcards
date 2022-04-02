@@ -25,6 +25,10 @@ namespace Flashcards
             {
                 ConsoleTableBuilder.From(FlashcardController.GetStack()).ExportAndWriteLine();
             }
+            else if (type == "session")
+            {
+                ConsoleTableBuilder.From(FlashcardController.GetSessions()).ExportAndWriteLine();
+            }
 
             if (pause == true)
             {
@@ -111,7 +115,7 @@ namespace Flashcards
             Console.WriteLine("\n Deleting a {0}...  \n Type MENU to return.", type);
             FlashcardDTO card = new FlashcardDTO();
 
-            if (type == "card")
+            if (type == "card" || type == "session")
             {
                 Console.Write("\n Enter ID of the {0} to delete: ", type);
                 string entryId = Validation.Validate(Console.ReadLine(), "id");
@@ -124,7 +128,7 @@ namespace Flashcards
                 if (card.StackName == "MENU") { return; }
             }
 
-            FlashcardController.UpdateRow(card, type);
+            FlashcardController.DeleteRow(card, type);
         }
     }
 }

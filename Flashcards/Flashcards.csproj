@@ -49,6 +49,7 @@
   <ItemGroup>
     <Compile Include="Models\Flashcard.cs" />
     <Compile Include="Models\FlashcardDTO.cs" />
+    <Compile Include="Models\Session.cs" />
     <Compile Include="StudySession.cs" />
     <Compile Include="Views.cs" />
     <Compile Include="Program.cs" />

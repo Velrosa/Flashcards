@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Flashcards.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +11,12 @@ namespace Flashcards
     {
         public static void Session()
         {
-            List<Flashcard> cards = FlashcardController.GetCards();
+            Views.ShowTable("stack", false);
+            
+            Console.WriteLine("Enter the name of a Stack to study: ");
+            string stack = Console.ReadLine();
+            
+            List<Flashcard> cards = FlashcardController.GetStackSet(stack);
 
             int score = 0;
             int cardNum = 1;
@@ -34,7 +40,15 @@ namespace Flashcards
                 }
                 cardNum++;
             }
+                        
             Console.WriteLine("\n You scored {0} points out of {1}. \n\n Press any key to return... ", score, cardTotal);
+
+            FlashcardDTO session = new FlashcardDTO();
+            session.Date = (DateTime.Now).ToString();
+            session.StackName = cards[0].StackName;
+            session.Score = score.ToString() + " out of " + cardTotal.ToString();
+            
+            FlashcardController.InsertRow(session, "session");
             Console.ReadKey();
         }
     }

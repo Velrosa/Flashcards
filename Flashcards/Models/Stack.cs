@@ -9,7 +9,5 @@ namespace Flashcards
     internal class Stack
     {
         public string Name { get; set; }
-
-        public string NewName { get; set; }
     }
 }
