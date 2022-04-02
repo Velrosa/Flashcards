@@ -34,8 +34,10 @@ namespace Flashcards
                     cmd.CommandText = "IF NOT EXISTS (SELECT * FROM sysobjects WHERE id = object_id(N'[dbo].[Flashcards]')" +
                                             "AND OBJECTPROPERTY(id, N'IsUserTable') = 1)" +
                                             "CREATE TABLE[dbo].[Flashcards] (CardID INT IDENTITY(1,1) PRIMARY KEY," +
-                                                                            "CardName TEXT," +
-                                                                            "StackID INT FOREIGN KEY REFERENCES Stacks(StackID));";
+                                                                            "CardQuestion TEXT," +
+                                                                            "CardAnswer TEXT," +
+                                                                            "StackID INT FOREIGN KEY REFERENCES Stacks(StackID) " +
+                                                                            "ON DELETE CASCADE ON UPDATE CASCADE);";
                     cmd.ExecuteNonQuery();
                 }
             }
@@ -53,8 +55,9 @@ namespace Flashcards
             Console.WriteLine("\n MAIN MENU\n\n" +
                                 " What would you like to do?\n\n" +
                                 " Type 0 to Close Application.\n" +
-                                " Type 1 for Flashcards.\n" +
-                                " Type 2 for Stacks.\n");
+                                " Type 1 to Edit Flashcards.\n" +
+                                " Type 2 to Edit Stacks.\n" +
+                                " Type 3 to Begin a Study Session.\n");
 
             // Users selection from the Menu.
             string selector = Convert.ToString(Console.ReadKey(true).KeyChar);
@@ -66,69 +69,54 @@ namespace Flashcards
                     break;
                 
                 case "1":
-                    Console.Clear();
-                    Console.WriteLine("\n FLASHCARDS MENU\n\n" +
-                                        " What would you like to do?\n\n" +
-                                        " Type 0 to Return to MAIN MENU.\n" +
-                                        " Type 1 to View All Flashcards.\n" +
-                                        " Type 2 to Add a FlashCard.\n" +
-                                        " Type 3 to Update a Flashcard.\n" +
-                                        " Type 4 to Delete a Flashcard.\n");
-
-                    selector = Convert.ToString(Console.ReadKey(true).KeyChar);
-
-                    switch (selector)
-                    {
-                        case "0":
-                            return;
-                        case "1":
-                            Console.Clear();
-                            FlashcardsView.ShowTable("1");
-                            break;
-                        case "2":
-                            Console.Clear();
-                            FlashcardsView.InsertView("1");
-                            break;
-                    }
-                    
+                    SubMenu("card");
                     break;
-                
                 case "2":
-                    while (true)
-                    {
-                        Console.Clear();
-                        Console.WriteLine("\n STACKS MENU\n\n" +
-                                            " What would you like to do?\n\n" +
-                                            " Type 0 to Return to MAIN MENU.\n" +
-                                            " Type 1 to View All Stacks.\n" +
-                                            " Type 2 to Add a Stack.\n" +
-                                            " Type 3 to Update a Stack.\n" +
-                                            " Type 4 to Delete a Stack.\n");
-
-                        selector = Convert.ToString(Console.ReadKey(true).KeyChar);
-
-                        switch (selector)
-                        {
-                            case "0":
-                                return;
-                            case "1":
-                                Console.Clear();
-                                FlashcardsView.ShowTable("2");
-                                break;
-                            case "2":
-                                Console.Clear();
-                                FlashcardsView.InsertView("2");
-                                break;
-                        }
-                    }
-                    
-                    break;
-                
+                    SubMenu("stack");
+                    break;                
                 default:
                     Console.Write(" Invalid Entry. press any key to return... ");
                     Console.ReadKey();
                     break;
+            }         
+        }
+        public static void SubMenu(string type)
+        {
+            while (true)
+            {
+                Console.Clear();
+                Console.WriteLine("\n {0}S MENU\n", type.ToUpper());
+                Console.WriteLine(" What would you like to do?\n\n" +
+                                    " Type 0 to Return to MAIN MENU.\n" +
+                                    " Type 1 to View all {0}s.\n" +
+                                    " Type 2 to Add a {0}.\n" +
+                                    " Type 3 to Update a {0}.\n" +
+                                    " Type 4 to Delete a {0}.\n", type);
 
+                string selector = Convert.ToString(Console.ReadKey(true).KeyChar);
+
+                Console.Clear();
+                switch (selector)
+                {
+                    case "0":
+                        return;
+                    case "1":
+                        Views.ShowTable(type, true);
+                        break;
+                    case "2":
+                        Views.InsertView(type);
+                        break;
+                    case "3":
+                        Views.UpdateView(type);
+                        break;
+                    case "4":
+                        Views.DeleteView(type);
+                        break;
+                    default:
+                        Console.Write(" Invalid Entry. press any key to return... ");
+                        Console.ReadKey();
+                        break;
+                }
             }
         }
     }

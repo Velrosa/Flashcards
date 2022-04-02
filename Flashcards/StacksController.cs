@@ -60,5 +60,32 @@ namespace Flashcards
                 }
             }
         }
+        public static void UpdateRow(Stack stack)
+        {
+            using (var con = new SqlConnection(conString))
+            {
+                using (var cmd = con.CreateCommand())
+                {
+                    con.Open();
+                    cmd.CommandText = "UPDATE Stacks SET StackName=(@stackname) WHERE StackID=(@id) ";
+                    cmd.Parameters.AddWithValue("@id", stack.ID);
+                    cmd.Parameters.AddWithValue("@stackname", stack.Name);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+        public static void DeleteRow(Stack stack)
+        {
+            using (var con = new SqlConnection(conString))
+            {
+                using (var cmd = con.CreateCommand())
+                {
+                    con.Open();
+                    cmd.CommandText = "DELETE FROM Stacks WHERE StackID=(@Id)";
+                    cmd.Parameters.AddWithValue("@Id", stack.ID);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
     }
 }

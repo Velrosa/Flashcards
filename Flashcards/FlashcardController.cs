@@ -34,7 +34,9 @@ namespace Flashcards
                                 tableData.Add(new Flashcard
                                 {
                                     ID = reader.GetInt32(0),
-                                    Name = reader.GetString(1),
+                                    Question = reader.GetString(1),
+                                    Answer = reader.GetString(2),
+                                    F_ID = reader.GetInt32(3)
                                 });
                             }
                         }
@@ -55,8 +57,9 @@ namespace Flashcards
                 using (var cmd = con.CreateCommand())
                 {
                     con.Open();
-                    cmd.CommandText = "INSERT INTO Flashcards (CardName, StackID) VALUES (@name, @f_id)";
-                    cmd.Parameters.AddWithValue("@name", card.Name);
+                    cmd.CommandText = "INSERT INTO Flashcards (CardQuestion, CardAnswer, StackID) VALUES (@question, @answer, @f_id)";
+                    cmd.Parameters.AddWithValue("@question", card.Question);
+                    cmd.Parameters.AddWithValue("@answer", card.Answer);
                     cmd.Parameters.AddWithValue("@f_id", card.F_ID);
                     try
                     {
@@ -64,9 +67,37 @@ namespace Flashcards
                     }
                     catch (Exception)
                     {
-                        Console.WriteLine("Invalid Stack ID. \n\nPress any key to return... ");
+                        Console.WriteLine("\nInvalid Stack ID. \n\nPress any key to return... ");
                         Console.ReadKey();
                     }
+                }
+            }
+        }
+        public static void UpdateRow(Flashcard card)
+        {
+            using (var con = new SqlConnection(conString))
+            {
+                using (var cmd = con.CreateCommand())
+                {
+                    con.Open();
+                    cmd.CommandText = "UPDATE Flashcards SET CardQuestion=(@question), CardAnswer=(@answer) WHERE CardID=(@id) ";
+                    cmd.Parameters.AddWithValue("@id", card.ID);
+                    cmd.Parameters.AddWithValue("@question", card.Question);
+                    cmd.Parameters.AddWithValue("@answer", card.Answer);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+        public static void DeleteRow(Flashcard card)
+        {
+            using (var con = new SqlConnection(conString))
+            {
+                using (var cmd = con.CreateCommand())
+                {
+                    con.Open();
+                    cmd.CommandText = "DELETE FROM Flashcards WHERE CardID=(@Id)";
+                    cmd.Parameters.AddWithValue("@Id", card.ID);
+                    cmd.ExecuteNonQuery();
                 }
             }
         }
