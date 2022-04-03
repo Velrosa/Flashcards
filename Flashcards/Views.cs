@@ -30,12 +30,14 @@ namespace Flashcards
                 ConsoleTableBuilder.From(FlashcardController.GetSessions()).ExportAndWriteLine();
             }
 
+            // Waits on the displayed table, for viewing purposes
             if (pause == true)
             {
                 Console.Write("\n Press any key to return to menu... ");
                 Console.ReadKey();
             }
         }
+        // Used for Inserting records to the controller.
         public static void InsertView(string type)
         {
             Console.WriteLine("\n Adding a new {0}...   \n Type MENU to return.", type);
@@ -61,6 +63,7 @@ namespace Flashcards
             FlashcardController.InsertRow(card, type);
 
         }
+        // Used for Updating records to the controller.
         public static void UpdateView(string type)
         {
             ShowTable(type, false);
@@ -74,12 +77,14 @@ namespace Flashcards
                 string entryId = Validation.Validate(Console.ReadLine(), "id");
                 if (entryId == "MENU") { return; } else { card.ID = Convert.ToInt32(entryId); }
 
+                // Show the stacks table so you can easier pick which stack it belongs to.
                 ShowTable("stack", false);
 
                 Console.Write("\n Please Enter the StackName this card belongs to: ");
                 card.StackName = Validation.Validate(Console.ReadLine(), "text");
                 if (card.StackName == "MENU") { return; }
 
+                // Show the cards table for reference.
                 ShowTable(type, false);
                 
                 Console.WriteLine(" CardID being edited {0}, StackName it belongs to {1}", entryId, card.StackName);
@@ -107,7 +112,7 @@ namespace Flashcards
             FlashcardController.UpdateRow(card, type);
 
         }
-
+        // Used to Delete records to the controller.
         public static void DeleteView(string type)
         {
             ShowTable(type, false);

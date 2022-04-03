@@ -14,7 +14,7 @@ namespace Flashcards
         // Connection string to Database.
         private static string conString = ConfigurationManager.AppSettings.Get("conString");
 
-        // Fetchs all database information back to be displayed elsewhere.
+        // Fetchs all cards records to be displayed in views.
         public static List<Flashcard> GetCards()
         {
             List<Flashcard> tableData = new List<Flashcard>();
@@ -50,6 +50,7 @@ namespace Flashcards
             }
             return tableData;
         }
+        // Fetchs a particular stack set to be displayed in study session.
         public static List<Flashcard> GetStackSet(string stack)
         {
             List<Flashcard> tableData = new List<Flashcard>();
@@ -86,6 +87,7 @@ namespace Flashcards
             }
             return tableData;
         }
+        // Fetchs all stack records to be displayed in views.
         public static List<Stack> GetStack()
         {
             List<Stack> tableData = new List<Stack>();
@@ -118,6 +120,7 @@ namespace Flashcards
             }
             return tableData;
         }
+        // Fetchs all session records to be displayed in views.
         public static List<Session> GetSessions()
         {
             List<Session> tableData = new List<Session>();
@@ -153,6 +156,7 @@ namespace Flashcards
             }
             return tableData;
         }
+        // Inserts a row into the database using the DTO and the type of data.
         public static void InsertRow(FlashcardDTO card, string type)
         {
             using (var con = new SqlConnection(conString))
@@ -191,6 +195,7 @@ namespace Flashcards
                 }
             }
         }
+        // Updates a row in the database using the DTO and the type of data.
         public static void UpdateRow(FlashcardDTO card, string type)
         {
             using (var con = new SqlConnection(conString))
@@ -225,6 +230,7 @@ namespace Flashcards
                 }
             }
         }
+        // Deletes a row in the database using the DTO and the type of data.
         public static void DeleteRow(FlashcardDTO card, string type)
         {
             using (var con = new SqlConnection(conString))

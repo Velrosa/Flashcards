@@ -17,6 +17,7 @@ namespace Flashcards
             {
                 using (var cmd = con.CreateCommand())
                 {
+                    // Check if a table exists in the database, if not create one.
                     con.Open();
                     cmd.CommandText = "IF NOT EXISTS (SELECT * FROM sysobjects WHERE id = object_id(N'[dbo].[Stacks]')" +
                                             "AND OBJECTPROPERTY(id, N'IsUserTable') = 1)" +
@@ -42,13 +43,14 @@ namespace Flashcards
                     cmd.ExecuteNonQuery();
                 }
             }
-
+            
+            // Main runtime loop.
             while (true)
             {
                 DisplayMenu();
             }
         }
-
+        // Displays all the menus to the User.
         public static void DisplayMenu()
         {
             Console.Clear();
@@ -91,6 +93,7 @@ namespace Flashcards
                     break;
             }         
         }
+        // SubMenus for Cards and Stacks.
         public static void SubMenu(string type)
         {
             while (true)

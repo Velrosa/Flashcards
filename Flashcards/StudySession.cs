@@ -11,24 +11,28 @@ namespace Flashcards
     {
         public static void Session()
         {
+            // Pick a stack to study.
             Views.ShowTable("stack", false);
-            
             Console.WriteLine("Enter the name of a Stack to study: ");
             string stack = Console.ReadLine();
             
+            // Fetch that stacks cards to display.
             List<Flashcard> cards = FlashcardController.GetStackSet(stack);
 
+            // initilise the score card counter and total number of cards.
             int score = 0;
             int cardNum = 1;
             int cardTotal = cards.Count();
 
             Console.Clear();
             
+            // Display each card to the screen to be answered. Increment card counter and score accordingly.
             foreach (Flashcard card in cards)
             {
                 Console.WriteLine("\n Viewing card {0} of {1} from Stack {2}", cardNum, cardTotal, card.StackName);
                 Console.Write("\n {0}: ", card.Question);
                 string answer = Console.ReadLine();
+                
                 if (answer == card.Answer)
                 {
                     Console.WriteLine(" Correct!");
@@ -41,6 +45,7 @@ namespace Flashcards
                 cardNum++;
             }
                         
+            // Display finished score to the User and enter the session information into the database.
             Console.WriteLine("\n You scored {0} points out of {1}. \n\n Press any key to return... ", score, cardTotal);
 
             FlashcardDTO session = new FlashcardDTO();
