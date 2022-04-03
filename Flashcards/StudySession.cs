@@ -13,7 +13,7 @@ namespace Flashcards
         {
             // Pick a stack to study.
             Views.ShowTable("stack", false);
-            Console.WriteLine("Enter the name of a Stack to study: ");
+            Console.Write("Enter the name of a Stack to study: ");
             string stack = Console.ReadLine();
             
             // Fetch that stacks cards to display.
@@ -29,8 +29,8 @@ namespace Flashcards
             // Display each card to the screen to be answered. Increment card counter and score accordingly.
             foreach (Flashcard card in cards)
             {
-                Console.WriteLine("\n Viewing card {0} of {1} from Stack {2}", cardNum, cardTotal, card.StackName);
-                Console.Write("\n {0}: ", card.Question);
+                Console.WriteLine($"\n Viewing card {cardNum} of {cardTotal} from Stack {card.StackName}");
+                Console.Write($"\n {card.Question}: ");
                 string answer = Console.ReadLine();
                 
                 if (answer == card.Answer)
@@ -40,13 +40,13 @@ namespace Flashcards
                 }
                 else
                 {
-                    Console.WriteLine(" Incorrect. The answer was... {0}", card.Answer);
+                    Console.WriteLine($" Incorrect. The answer was... {card.Answer}");
                 }
                 cardNum++;
             }
                         
             // Display finished score to the User and enter the session information into the database.
-            Console.WriteLine("\n You scored {0} points out of {1}. \n\n Press any key to return... ", score, cardTotal);
+            Console.WriteLine($"\n You scored {score} points out of {cardTotal}. \n\n Press any key to return... ");
 
             FlashcardDTO session = new FlashcardDTO();
             session.Date = (DateTime.Now).ToString();

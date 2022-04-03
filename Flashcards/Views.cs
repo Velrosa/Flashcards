@@ -15,7 +15,7 @@ namespace Flashcards
         {
             Console.Clear();
 
-            Console.WriteLine("\n Displaying all records:\n");
+            Console.WriteLine("\n Displaying all records... \n");
 
             if (type == "card")
             {
@@ -32,6 +32,20 @@ namespace Flashcards
                 var returnList = new FlashcardController().Get<Session>("Sessions");
                 ConsoleTableBuilder.From(returnList).ExportAndWriteLine();
             }
+            else if (type == "cardStack")
+            {
+                Console.Clear();
+                ShowTable("stack", false);
+
+                Console.WriteLine("\n Type MENU to return.");
+                Console.Write("\n Enter the name of the card stack to display: ");
+                string entry = Validation.Validate(Console.ReadLine(), "text");
+                if (entry == "MENU") { return; }
+
+                Console.Clear();
+                Console.WriteLine("\n Displaying all records... \n");
+                ConsoleTableBuilder.From(FlashcardController.GetStackSet(entry)).ExportAndWriteLine();
+            }
 
             // Waits on the displayed table, for viewing purposes
             if (pause == true)
@@ -43,7 +57,8 @@ namespace Flashcards
         // Used for Inserting records to the controller.
         public static void InsertView(string type)
         {
-            Console.WriteLine("\n Adding a new {0}...   \n Type MENU to return.", type);
+            Console.Clear();
+            Console.WriteLine($"\n Adding a new {type}...   \n Type MENU to return.");
             FlashcardDTO card = new FlashcardDTO();
 
             if (type == "card")
@@ -71,12 +86,12 @@ namespace Flashcards
         {
             ShowTable(type, false);
 
-            Console.WriteLine("\n Updating a {0}...  \n Type MENU to return.", type);
+            Console.WriteLine($"\n Updating a {type}...  \n Type MENU to return.");
             FlashcardDTO card = new FlashcardDTO();
 
             if (type == "card")
             {
-                Console.Write("\n Please Enter the ID of the {0} to change: ", type);
+                Console.Write($"\n Please Enter the ID of the {type} to change: ");
                 string entryId = Validation.Validate(Console.ReadLine(), "id");
                 if (entryId == "MENU") { return; } else { card.ID = Convert.ToInt32(entryId); }
 
@@ -90,7 +105,7 @@ namespace Flashcards
                 // Show the cards table for reference.
                 ShowTable(type, false);
                 
-                Console.WriteLine(" CardID being edited {0}, StackName it belongs to {1}", entryId, card.StackName);
+                Console.WriteLine($" CardID being edited {entryId}, StackName it belongs to {card.StackName}");
 
                 Console.Write("\n Please Enter the new Card question: ");
                 card.Question = Validation.Validate(Console.ReadLine(), "text");
@@ -120,20 +135,27 @@ namespace Flashcards
         {
             ShowTable(type, false);
 
-            Console.WriteLine("\n Deleting a {0}...  \n Type MENU to return.", type);
+            Console.WriteLine($"\n Deleting a {type}...  \n Type MENU to return.");
             FlashcardDTO card = new FlashcardDTO();
 
             if (type == "card" || type == "session")
             {
-                Console.Write("\n Enter ID of the {0} to delete: ", type);
+                Console.Write($"\n Enter ID of the {type} to delete: ");
                 string entryId = Validation.Validate(Console.ReadLine(), "id");
                 if (entryId == "MENU") { return; } else { card.ID = Convert.ToInt32(entryId); }
+                Console.Write($"\n Are you sure you wish to delete record ID: {entryId} (y or n)? ");
+                string delete = Console.ReadLine();
+                if (delete != "y") { return; }
+
             }
             else if (type == "stack")
             {
-                Console.Write("\n Enter the name of the {0} to delete: ", type);
+                Console.Write($"\n Enter the name of the {type} to delete: ");
                 card.StackName = Validation.Validate(Console.ReadLine(), "text");
                 if (card.StackName == "MENU") { return; }
+                Console.Write($"\n Are you sure you wish to delete record Name: {card.StackName} (y or n)? ");
+                string delete = Console.ReadLine();
+                if (delete != "y") { return; }
             }
 
             FlashcardController.DeleteRow(card, type);

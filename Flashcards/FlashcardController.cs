@@ -15,8 +15,52 @@ namespace Flashcards
         // Connection string to Database.
         private static string conString = ConfigurationManager.AppSettings.Get("conString");
 
+        // Provided a Model and table name, returns a list of records to be displayed.
+        public List<T> Get<T>(string table)
+        {
+            List<T> list = new List<T>();
+
+            using (var con = new SqlConnection(conString))
+            {
+                using (var cmd = con.CreateCommand())
+                {
+                    con.Open();
+                    cmd.CommandText = $"SELECT * FROM {table}";
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            while (reader.Read())
+                            {
+                                int j = 0;
+                                // instanciate object of the type provided
+                                T obj = (T)Activator.CreateInstance(typeof(T));
+                                // for each property on the model.
+                                foreach (var prop in typeof(T).GetProperties())
+                                {
+                                    // get the value from SQL and the model propertys TYPE, add it to the Model object
+                                    var value = reader.GetValue(j);
+                                    var propType = prop.PropertyType;
+                                    prop.SetValue(obj, Convert.ChangeType(value, propType));
+                                    j++;
+                                }
+
+                                list.Add(obj);
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine(" No Rows to display.");
+                        }
+                    }
+                }
+            }
+            return list;
+        }
+        
         // Fetchs all of a stack set to be displayed in study session.
-        public static List<Flashcard> GetStackSet(string stack)
+        public static List<Flashcard> GetStackSet(string stackName)
         {
             List<Flashcard> tableData = new List<Flashcard>();
 
@@ -26,7 +70,7 @@ namespace Flashcards
                 {
                     con.Open();
                     cmd.CommandText = "SELECT * FROM Flashcards WHERE StackName=(@stackName)";
-                    cmd.Parameters.AddWithValue("@stackName", stack);
+                    cmd.Parameters.AddWithValue("@stackName", stackName);
 
                     using (var reader = cmd.ExecuteReader())
                     {
@@ -152,49 +196,6 @@ namespace Flashcards
                     cmd.ExecuteNonQuery();
                 }
             }
-        }
-        // Provided a Model and table name, returns a list of records to be displayed.
-        public List<T> Get<T>(string table)
-        {
-            List<T> list = new List<T>();
-            
-            using(var con = new SqlConnection(conString))
-            {
-                using (var cmd = con.CreateCommand())
-                {
-                    con.Open();
-                    cmd.CommandText = $"SELECT * FROM {table}";
-
-                    using(var reader = cmd.ExecuteReader())
-                    {
-                        if (reader.HasRows)
-                        {
-                            while (reader.Read())
-                            {
-                                int j = 0;
-                                // instanciate object of the type provided
-                                T obj = (T)Activator.CreateInstance(typeof(T));
-                                // for each property on the model.
-                                foreach (var prop in typeof(T).GetProperties())
-                                {
-                                    // get the value from SQL and the model propertys TYPE, add it to the Model object
-                                    var value = reader.GetValue(j);
-                                    var propType = prop.PropertyType;
-                                    prop.SetValue(obj, Convert.ChangeType(value, propType));
-                                    j++;
-                                }
-
-                                list.Add(obj);
-                            }
-                        }
-                        else
-                        { 
-                            Console.WriteLine(" No Rows to display.");
-                        }
-                    }
-                }
-            }
-            return list;
         }
     }
 }

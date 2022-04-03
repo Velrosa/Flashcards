@@ -78,11 +78,12 @@ namespace Flashcards
             Console.WriteLine("\n MAIN MENU\n\n" +
                                 " What would you like to do?\n\n" +
                                 " Type 0 to Close Application.\n" +
-                                " Type 1 to Edit Flashcards.\n" +
-                                " Type 2 to Edit Stacks.\n" +
-                                " Type 3 to Begin a Study Session.\n" +
-                                " Type 4 to Display Previous Sessions.\n" +
-                                " Type 5 to Remove a Session.\n");
+                                " Type 1 for Flashcards MENU.\n" +
+                                " Type 2 for Stacks MENU.\n" +
+                                " Type 3 to View a Stack of Cards.\n" +
+                                " Type 4 to Begin a Study Session.\n" +
+                                " Type 5 to Display Previous Sessions.\n" +
+                                " Type 6 to Remove a Session.\n");
 
             // Users selection from the Menu.
             string selector = Convert.ToString(Console.ReadKey(true).KeyChar);
@@ -99,12 +100,15 @@ namespace Flashcards
                     SubMenu("stack");
                     break;
                 case "3":
-                    StudySession.Session();
+                    Views.ShowTable("cardStack", true);
                     break;
                 case "4":
-                    Views.ShowTable("session", true);
+                    StudySession.Session();
                     break;
                 case "5":
+                    Views.ShowTable("session", true);
+                    break;
+                case "6":
                     Views.DeleteView("session");
                     break;
                 default:
@@ -119,7 +123,7 @@ namespace Flashcards
             while (true)
             {
                 Console.Clear();
-                Console.WriteLine("\n {0}S MENU\n", type.ToUpper());
+                Console.WriteLine($"\n {type.ToUpper()}S MENU\n");
                 Console.WriteLine(" What would you like to do?\n\n" +
                                     " Type 0 to Return to MAIN MENU.\n" +
                                     " Type 1 to View all {0}s.\n" +
@@ -129,7 +133,6 @@ namespace Flashcards
 
                 string selector = Convert.ToString(Console.ReadKey(true).KeyChar);
 
-                Console.Clear();
                 switch (selector)
                 {
                     case "0":
