@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Configuration;
 using System.Data.SqlClient;
 using Flashcards.Models;
+using ConsoleTableExt;
 
 namespace Flashcards
 {
@@ -14,43 +15,7 @@ namespace Flashcards
         // Connection string to Database.
         private static string conString = ConfigurationManager.AppSettings.Get("conString");
 
-        // Fetchs all cards records to be displayed in views.
-        public static List<Flashcard> GetCards()
-        {
-            List<Flashcard> tableData = new List<Flashcard>();
-
-            using (var con = new SqlConnection(conString))
-            {
-                using (var cmd = con.CreateCommand())
-                {
-                    con.Open();
-                    cmd.CommandText = "SELECT * FROM Flashcards";
-
-                    using (var reader = cmd.ExecuteReader())
-                    {
-                        if (reader.HasRows)
-                        {
-                            while (reader.Read())
-                            {
-                                tableData.Add(new Flashcard
-                                {
-                                    ID = reader.GetInt32(0),
-                                    Question = reader.GetString(1),
-                                    Answer = reader.GetString(2),
-                                    StackName = reader.GetString(3)
-                                });
-                            }
-                        }
-                        else
-                        {
-                            Console.WriteLine(" No Rows to Display.");
-                        }
-                    }
-                }
-            }
-            return tableData;
-        }
-        // Fetchs a particular stack set to be displayed in study session.
+        // Fetchs all of a stack set to be displayed in study session.
         public static List<Flashcard> GetStackSet(string stack)
         {
             List<Flashcard> tableData = new List<Flashcard>();
@@ -74,75 +39,6 @@ namespace Flashcards
                                     ID = reader.GetInt32(0),
                                     Question = reader.GetString(1),
                                     Answer = reader.GetString(2),
-                                    StackName = reader.GetString(3)
-                                });
-                            }
-                        }
-                        else
-                        {
-                            Console.WriteLine(" No Rows to Display.");
-                        }
-                    }
-                }
-            }
-            return tableData;
-        }
-        // Fetchs all stack records to be displayed in views.
-        public static List<Stack> GetStack()
-        {
-            List<Stack> tableData = new List<Stack>();
-
-            using (var con = new SqlConnection(conString))
-            {
-                using (var cmd = con.CreateCommand())
-                {
-                    con.Open();
-                    cmd.CommandText = "SELECT * FROM Stacks";
-
-                    using (var reader = cmd.ExecuteReader())
-                    {
-                        if (reader.HasRows)
-                        {
-                            while (reader.Read())
-                            {
-                                tableData.Add(new Stack
-                                {
-                                    Name = reader.GetString(0)
-                                });
-                            }
-                        }
-                        else
-                        {
-                            Console.WriteLine(" No Rows to Display.");
-                        }
-                    }
-                }
-            }
-            return tableData;
-        }
-        // Fetchs all session records to be displayed in views.
-        public static List<Session> GetSessions()
-        {
-            List<Session> tableData = new List<Session>();
-
-            using (var con = new SqlConnection(conString))
-            {
-                using (var cmd = con.CreateCommand())
-                {
-                    con.Open();
-                    cmd.CommandText = "SELECT * FROM Sessions";
-
-                    using (var reader = cmd.ExecuteReader())
-                    {
-                        if (reader.HasRows)
-                        {
-                            while (reader.Read())
-                            {
-                                tableData.Add(new Session
-                                {
-                                    ID = reader.GetInt32(0),
-                                    Date = reader.GetString(1),
-                                    Score = reader.GetString(2),
                                     StackName = reader.GetString(3)
                                 });
                             }
@@ -256,6 +152,49 @@ namespace Flashcards
                     cmd.ExecuteNonQuery();
                 }
             }
+        }
+        // Provided a Model and table name, returns a list of records to be displayed.
+        public List<T> Get<T>(string table)
+        {
+            List<T> list = new List<T>();
+            
+            using(var con = new SqlConnection(conString))
+            {
+                using (var cmd = con.CreateCommand())
+                {
+                    con.Open();
+                    cmd.CommandText = $"SELECT * FROM {table}";
+
+                    using(var reader = cmd.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            while (reader.Read())
+                            {
+                                int j = 0;
+                                // instanciate object of the type provided
+                                T obj = (T)Activator.CreateInstance(typeof(T));
+                                // for each property on the model.
+                                foreach (var prop in typeof(T).GetProperties())
+                                {
+                                    // get the value from SQL and the model propertys TYPE, add it to the Model object
+                                    var value = reader.GetValue(j);
+                                    var propType = prop.PropertyType;
+                                    prop.SetValue(obj, Convert.ChangeType(value, propType));
+                                    j++;
+                                }
+
+                                list.Add(obj);
+                            }
+                        }
+                        else
+                        { 
+                            Console.WriteLine(" No Rows to display.");
+                        }
+                    }
+                }
+            }
+            return list;
         }
     }
 }

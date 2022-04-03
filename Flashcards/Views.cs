@@ -19,15 +19,18 @@ namespace Flashcards
 
             if (type == "card")
             {
-                ConsoleTableBuilder.From(FlashcardController.GetCards()).ExportAndWriteLine();
+                var returnList = new FlashcardController().Get<Flashcard>("Flashcards");
+                ConsoleTableBuilder.From(returnList).ExportAndWriteLine();
             }
             else if (type == "stack")
             {
-                ConsoleTableBuilder.From(FlashcardController.GetStack()).ExportAndWriteLine();
+                var returnList = new FlashcardController().Get<Stack>("Stacks");
+                ConsoleTableBuilder.From(returnList).ExportAndWriteLine();
             }
             else if (type == "session")
             {
-                ConsoleTableBuilder.From(FlashcardController.GetSessions()).ExportAndWriteLine();
+                var returnList = new FlashcardController().Get<Session>("Sessions");
+                ConsoleTableBuilder.From(returnList).ExportAndWriteLine();
             }
 
             // Waits on the displayed table, for viewing purposes

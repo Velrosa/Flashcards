@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Flashcards.Models
 {
-    internal class FlashcardDTO
+    public class FlashcardDTO
     {
         public int ID { get; set; }
         public string Question { get; set; }
