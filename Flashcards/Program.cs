@@ -11,13 +11,31 @@ namespace Flashcards
     internal class Program
     {
         static string conString = ConfigurationManager.AppSettings.Get("conString");
+        static string dbString = ConfigurationManager.AppSettings.Get("dbString");
         static void Main(string[] args)
         {
+            // Creates the Database if it doesnt exist.
+            using (var con = new SqlConnection(dbString))
+            {
+                using (var cmd = con.CreateCommand())
+                {
+                    con.Open();
+                    cmd.CommandText = "SELECT db_id('Flashcards')";
+                    bool state = cmd.ExecuteScalar() != DBNull.Value;
+
+                    if (!state)
+                    {
+                        cmd.CommandText = "CREATE DATABASE Flashcards";
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+
+            // Check if a tables exist in the database, if not create them.
             using (var con = new SqlConnection(conString))
             {
                 using (var cmd = con.CreateCommand())
                 {
-                    // Check if a table exists in the database, if not create one.
                     con.Open();
                     cmd.CommandText = "IF NOT EXISTS (SELECT * FROM sysobjects WHERE id = object_id(N'[dbo].[Stacks]')" +
                                             "AND OBJECTPROPERTY(id, N'IsUserTable') = 1)" +
