@@ -8,7 +8,7 @@ using Flashcards.Models;
 
 namespace Flashcards
 {
-    internal class Views
+    internal class UserInput
     {
         // Displays a table with all the current records in.
         public static void ShowTable(string type, bool pause)
@@ -64,6 +64,7 @@ namespace Flashcards
             if (type == "card")
             {
                 Console.Write("\n Please Enter the Flashcard question: ");
+                
                 card.Question = Validation.Validate(Console.ReadLine(), "text");
                 if (card.Question == "MENU") { return; }
 

@@ -100,16 +100,16 @@ namespace Flashcards
                     SubMenu("stack");
                     break;
                 case "3":
-                    Views.ShowTable("cardStack", true);
+                    UserInput.ShowTable("cardStack", true);
                     break;
                 case "4":
                     StudySession.Session();
                     break;
                 case "5":
-                    Views.ShowTable("session", true);
+                    UserInput.ShowTable("session", true);
                     break;
                 case "6":
-                    Views.DeleteView("session");
+                    UserInput.DeleteView("session");
                     break;
                 default:
                     Console.Write(" Invalid Entry. press any key to return... ");
@@ -138,16 +138,16 @@ namespace Flashcards
                     case "0":
                         return;
                     case "1":
-                        Views.ShowTable(type, true);
+                        UserInput.ShowTable(type, true);
                         break;
                     case "2":
-                        Views.InsertView(type);
+                        UserInput.InsertView(type);
                         break;
                     case "3":
-                        Views.UpdateView(type);
+                        UserInput.UpdateView(type);
                         break;
                     case "4":
-                        Views.DeleteView(type);
+                        UserInput.DeleteView(type);
                         break;
                     default:
                         Console.Write(" Invalid Entry. press any key to return... ");

@@ -12,7 +12,7 @@ namespace Flashcards
         public static void Session()
         {
             // Pick a stack to study.
-            Views.ShowTable("stack", false);
+            UserInput.ShowTable("stack", false);
             Console.Write("Enter the name of a Stack to study: ");
             string stack = Console.ReadLine();
             

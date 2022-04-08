@@ -11,8 +11,7 @@ namespace Flashcards
         public static string Validate(string entry, string type)
         {
             int valid_num = 0;
-
-
+                        
             if (type == "number" || type == "id")
             {
                 // TryParse the entry to confirm its a number, else re-enter.
@@ -51,6 +50,15 @@ namespace Flashcards
                         Console.Write(" Invalid date, Please enter again (DD/MM/YY HH:MM:SS): ");
                         entry = Console.ReadLine();
                     }
+                }
+            }
+
+            if (type == "text")
+            {
+                while (String.IsNullOrEmpty(entry))
+                {
+                    Console.Write(" Invalid entry, Please enter again: ");
+                    entry = Console.ReadLine();
                 }
             }
             return entry;
