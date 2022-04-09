@@ -105,7 +105,7 @@ namespace Flashcards
                     UserInput.ShowTable("cardStack", true);
                     break;
                 case "4":
-                    StudySession.Session();
+                    StudySession.StartSession();
                     break;
                 case "5":
                     UserInput.ShowTable("session", true);

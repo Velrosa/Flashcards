@@ -9,7 +9,7 @@ namespace Flashcards
 {
     internal class StudySession
     {
-        public static void Session()
+        public static void StartSession()
         {
             // Pick a stack to study.
             UserInput.ShowTable("stack", false);
@@ -19,6 +19,7 @@ namespace Flashcards
             // Fetch that stacks cards to display.
             List<Flashcard> cards = FlashcardController.GetStackSet(stack);
 
+            // If theres no cards in the stack, return to the menu.
             if (cards.Count == 0)
             {
                 Console.WriteLine(" Press any key to return... ");
@@ -28,7 +29,7 @@ namespace Flashcards
 
             // initilise the score card counter and total number of cards.
             int score = 0;
-            int cardNum = 1;
+            int cardCounter = 1;
             int cardTotal = cards.Count();
 
             Console.Clear();
@@ -36,7 +37,7 @@ namespace Flashcards
             // Display each card to the screen to be answered. Increment card counter and score accordingly.
             foreach (Flashcard card in cards)
             {
-                Console.WriteLine($"\n Viewing card {cardNum} of {cardTotal} from Stack {card.StackName}");
+                Console.WriteLine($"\n Viewing card {cardCounter} of {cardTotal} from Stack {card.StackName}");
                 Console.Write($"\n {card.Question}: ");
                 string answer = Console.ReadLine();
                 
@@ -49,7 +50,7 @@ namespace Flashcards
                 {
                     Console.WriteLine($" Incorrect. The answer was... {card.Answer}");
                 }
-                cardNum++;
+                cardCounter++;
             }
                         
             // Display finished score to the User and enter the session information into the database.

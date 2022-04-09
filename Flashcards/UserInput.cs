@@ -17,38 +17,37 @@ namespace Flashcards
 
             Console.WriteLine("\n Displaying all records... \n");
 
-            if (type == "card")
+            // Prints tables to the screen depending on type provided.
+            switch (type)
             {
-                var returnList = new FlashcardController().Get<Flashcard>("Flashcards");
-                ConsoleTableBuilder.From(returnList).ExportAndWriteLine();
-            }
-            else if (type == "stack")
-            {
-                var returnList = new FlashcardController().Get<Stack>("Stacks");
-                ConsoleTableBuilder.From(returnList).ExportAndWriteLine();
-            }
-            else if (type == "session")
-            {
-                var returnList = new FlashcardController().Get<Session>("Sessions");
-                ConsoleTableBuilder.From(returnList).ExportAndWriteLine();
-            }
-            else if (type == "yearlySession")
-            {
-                ConsoleTableBuilder.From(FlashcardController.GetMonthySessionData()).ExportAndWriteLine();
-            }
-            else if (type == "cardStack")
-            {
-                Console.Clear();
-                ShowTable("stack", false);
+                case "card":
+                    var cardList = new FlashcardController().Get<Flashcard>("Flashcards");
+                    ConsoleTableBuilder.From(cardList).ExportAndWriteLine();
+                    break;
+                case "stack":
+                    var stackList = new FlashcardController().Get<Stack>("Stacks");
+                    ConsoleTableBuilder.From(stackList).ExportAndWriteLine();
+                    break;
+                case "session":
+                    var sessionList = new FlashcardController().Get<Session>("Sessions");
+                    ConsoleTableBuilder.From(sessionList).ExportAndWriteLine();
+                    break;
+                case "yearlySession":
+                    ConsoleTableBuilder.From(FlashcardController.GetMonthySessionData()).ExportAndWriteLine();
+                    break;
+                case "cardStack":
+                    Console.Clear();
+                    ShowTable("stack", false);
 
-                Console.WriteLine("\n Type MENU to return.");
-                Console.Write("\n Enter the name of the card stack to display: ");
-                string entry = Validation.IsStringValid(Console.ReadLine());
-                if (entry == "MENU") { return; }
+                    Console.WriteLine("\n Type MENU to return.");
+                    Console.Write("\n Enter the name of the card stack to display: ");
+                    string entry = Validation.IsStringValid(Console.ReadLine());
+                    if (entry == "MENU") { return; }
 
-                Console.Clear();
-                Console.WriteLine("\n Displaying all records... \n");
-                ConsoleTableBuilder.From(FlashcardController.GetStackSet(entry)).ExportAndWriteLine();
+                    Console.Clear();
+                    Console.WriteLine("\n Displaying all records... \n");
+                    ConsoleTableBuilder.From(FlashcardController.GetStackSet(entry)).ExportAndWriteLine();
+                    break;
             }
 
             // Waits on the displayed table, for viewing purposes
