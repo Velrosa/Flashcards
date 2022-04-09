@@ -33,7 +33,7 @@ namespace Flashcards
                     }
                 }
 
-                if (isValid)
+                if (!isValid)
                 {
                     Console.Write(" Invalid entry, Please enter again: ");
                     inputString = Console.ReadLine();

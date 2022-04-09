@@ -17,7 +17,9 @@ namespace Flashcards.Models
 
         public string NewName { get; set; }
 
-        public string Score { get; set; }
+        public int Score { get; set; }
+
+        public int outOf { get; set; }
 
         public string Date { get; set; }
     }

@@ -96,6 +96,68 @@ namespace Flashcards
             }
             return tableData;
         }
+        
+        public static List<YearlySession> GetMonthySessionData()
+        {
+            List<YearlySession> tableData = new List<YearlySession>();
+
+            using (var con = new SqlConnection(conString))
+            {
+                using (var cmd = con.CreateCommand())
+                {
+                    con.Open();
+                    cmd.CommandText = "SELECT [StackName]," +
+                        "ISNULL([1], 0) AS Jan," +
+                        "ISNULL([2], 0) AS Feb," +
+                        "ISNULL([3], 0) AS Mar," +
+                        "ISNULL([4], 0) AS Apr," +
+                        "ISNULL([5], 0) AS May," +
+                        "ISNULL([6], 0) AS Jun," +
+                        "ISNULL([7], 0) AS Jul," +
+                        "ISNULL([8], 0) AS Aug," +
+                        "ISNULL([9], 0) AS Sep," +
+                        "ISNULL([10], 0) AS Oct," +
+                        "ISNULL([11], 0) AS Nov," +
+                        "ISNULL([12], 0) AS Dec " +
+                        "FROM (SELECT [StackName], DAY([Date]) AS [Month], Score FROM dbo.Sessions) AS D " +
+                        "PIVOT (SUM(Score) FOR [Month] IN (" +
+                        "[1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12]" +
+                        ")) AS P";
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            while (reader.Read())
+                            {
+                                tableData.Add(new YearlySession
+                                {
+                                    StackName = reader.GetString(0),
+                                    Jan = reader.GetInt32(1),
+                                    Feb = reader.GetInt32(2),
+                                    Mar = reader.GetInt32(3),
+                                    Apr = reader.GetInt32(4),
+                                    May = reader.GetInt32(5),
+                                    Jun = reader.GetInt32(6),
+                                    Jul = reader.GetInt32(7),
+                                    Aug = reader.GetInt32(8),
+                                    Sep = reader.GetInt32(9),
+                                    Oct = reader.GetInt32(10),
+                                    Nov = reader.GetInt32(11),
+                                    Dec = reader.GetInt32(12)
+                                });
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine(" No Rows to Display.");
+                        }
+                    }
+                }
+            }
+            return tableData;
+        }
+
         // Inserts a row into the database using the DTO and the type of data.
         public static void InsertRow(FlashcardDTO card, string type)
         {
@@ -116,9 +178,10 @@ namespace Flashcards
                     }
                     else if (type == "session")
                     {
-                        cmd.CommandText = "INSERT INTO Sessions (Date, Score, StackName) VALUES (@date, @score, @stackname)";
+                        cmd.CommandText = "INSERT INTO Sessions (Date, Score, outOf, StackName) VALUES (@date, @score, @outOf, @stackname)";
                         cmd.Parameters.AddWithValue("@date", card.Date);
                         cmd.Parameters.AddWithValue("@score", card.Score);
+                        cmd.Parameters.AddWithValue("@outOf", card.outOf);
                     }
 
                     cmd.Parameters.AddWithValue("@stackname", card.StackName);

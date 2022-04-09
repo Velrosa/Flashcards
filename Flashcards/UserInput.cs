@@ -32,6 +32,10 @@ namespace Flashcards
                 var returnList = new FlashcardController().Get<Session>("Sessions");
                 ConsoleTableBuilder.From(returnList).ExportAndWriteLine();
             }
+            else if (type == "yearlySession")
+            {
+                ConsoleTableBuilder.From(FlashcardController.GetMonthySessionData()).ExportAndWriteLine();
+            }
             else if (type == "cardStack")
             {
                 Console.Clear();

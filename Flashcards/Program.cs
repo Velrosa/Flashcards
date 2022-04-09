@@ -56,8 +56,9 @@ namespace Flashcards
                                         "AND OBJECTPROPERTY(id, N'IsUserTable') = 1)" +
                                         "CREATE TABLE[dbo].[Sessions] (" +
                                         "ID INT IDENTITY(1,1) PRIMARY KEY," +
-                                        "Date TEXT," +
-                                        "Score TEXT," +
+                                        "Date DATETIME," +
+                                        "Score INT," +
+                                        "outOf INT," +
                                         "StackName VARCHAR(50) FOREIGN KEY REFERENCES Stacks(StackName) " +
                                         "ON DELETE CASCADE ON UPDATE CASCADE);";
                     cmd.ExecuteNonQuery();
@@ -83,7 +84,8 @@ namespace Flashcards
                                 " Type 3 to View a Stack of Cards.\n" +
                                 " Type 4 to Begin a Study Session.\n" +
                                 " Type 5 to Display Previous Sessions.\n" +
-                                " Type 6 to Remove a Session.\n");
+                                " Type 6 to Display Yearly total for Sessions.\n" +
+                                " Type 7 to Remove a Session.\n");
 
             // Users selection from the Menu.
             string selector = Convert.ToString(Console.ReadKey(true).KeyChar);
@@ -109,7 +111,14 @@ namespace Flashcards
                     UserInput.ShowTable("session", true);
                     break;
                 case "6":
+                    UserInput.ShowTable("yearlySession", true);
+                    break;
+                case "7":
                     UserInput.DeleteView("session");
+                    break;
+                case "8":
+                    Console.WriteLine(DateTime.Now.ToString());
+                    Console.ReadKey();
                     break;
                 default:
                     Console.Write(" Invalid Entry. press any key to return... ");

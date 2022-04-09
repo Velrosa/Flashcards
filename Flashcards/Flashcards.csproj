@@ -50,6 +50,7 @@
     <Compile Include="Models\Flashcard.cs" />
     <Compile Include="Models\FlashcardDTO.cs" />
     <Compile Include="Models\Session.cs" />
+    <Compile Include="Models\YearlySession.cs" />
     <Compile Include="StudySession.cs" />
     <Compile Include="UserInput.cs" />
     <Compile Include="Program.cs" />

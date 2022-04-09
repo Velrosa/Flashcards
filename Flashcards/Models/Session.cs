@@ -12,7 +12,9 @@ namespace Flashcards.Models
 
         public string Date { get; set; }
 
-        public string Score { get; set; }
+        public int Score { get; set; }
+
+        public int outOf { get; set; }
 
         public string StackName { get; set; }
     }
