@@ -13,11 +13,18 @@ namespace Flashcards
         {
             // Pick a stack to study.
             UserInput.ShowTable("stack", false);
-            Console.Write("Enter the name of a Stack to study: ");
+            Console.Write(" Enter the name of a Stack to study: ");
             string stack = Validation.IsStringValid(Console.ReadLine());
             
             // Fetch that stacks cards to display.
             List<Flashcard> cards = FlashcardController.GetStackSet(stack);
+
+            if (cards.Count == 0)
+            {
+                Console.WriteLine(" Press any key to return... ");
+                Console.ReadKey();
+                return;
+            }
 
             // initilise the score card counter and total number of cards.
             int score = 0;
