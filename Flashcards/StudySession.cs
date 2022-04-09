@@ -49,7 +49,7 @@ namespace Flashcards
             Console.WriteLine($"\n You scored {score} points out of {cardTotal}. \n\n Press any key to return... ");
 
             FlashcardDTO session = new FlashcardDTO();
-            session.Date = DateTime.Now.ToString();
+            session.Date = DateTime.Now;
             session.StackName = cards[0].StackName;
             session.Score = score;
             session.outOf = cardTotal;

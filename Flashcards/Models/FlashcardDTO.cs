@@ -21,6 +21,6 @@ namespace Flashcards.Models
 
         public int outOf { get; set; }
 
-        public string Date { get; set; }
+        public DateTime Date { get; set; }
     }
 }

@@ -119,7 +119,7 @@ namespace Flashcards
                         "ISNULL([10], 0) AS Oct," +
                         "ISNULL([11], 0) AS Nov," +
                         "ISNULL([12], 0) AS Dec " +
-                        "FROM (SELECT [StackName], DAY([Date]) AS [Month], Score FROM dbo.Sessions) AS D " +
+                        "FROM (SELECT [StackName], MONTH([Date]) AS [Month], Score FROM dbo.Sessions) AS D " +
                         "PIVOT (SUM(Score) FOR [Month] IN (" +
                         "[1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12]" +
                         ")) AS P";
