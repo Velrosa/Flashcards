@@ -7,61 +7,101 @@ using System.Threading.Tasks;
 namespace Flashcards
 {
     internal class Validation
-    {
-        public static string Validate(string entry, string type)
-        {
-            int valid_num = 0;
-                        
-            if (type == "number" || type == "id")
+    {        
+        public static string IsStringValid(string inputString)
+        {            
+            while (true)
             {
-                // TryParse the entry to confirm its a number, else re-enter.
-                bool isNumber = int.TryParse(entry, out valid_num);
-                while (!isNumber || valid_num < 0)
+                bool isValid = true;
+                
+                if (inputString == "MENU")
                 {
-                    if (entry == "MENU")
-                    {
-                        return entry;
-                    }
-                    Console.Write(" Invalid entry, Please enter a number: ");
-                    entry = Console.ReadLine();
-                    isNumber = int.TryParse(entry, out valid_num);
+                    return inputString;
                 }
-            }
-
-            if (type == "date")
-            {
-                while (true)
+                
+                if (String.IsNullOrEmpty(inputString))
                 {
-                    if (entry == "MENU")
+                    Console.WriteLine(" Null or Empty string is invalid.");
+                    isValid = false;
+                }
+                foreach (char c in inputString)
+                {
+                    if (!Char.IsLetter(c) && c != ' ' && c != '/' && c != '?')
                     {
-                        return entry;
-                    }
-                    else if (entry == "NOW")
-                    {
-                        DateTime today = DateTime.Now;
-                        return today.ToString();
-                    }
-                    else if (DateTime.TryParse(entry, out DateTime date))
-                    {
-                        return date.ToString();
-                    }
-                    else
-                    {
-                        Console.Write(" Invalid date, Please enter again (DD/MM/YY HH:MM:SS): ");
-                        entry = Console.ReadLine();
+                        Console.WriteLine($" \"{c}\" is not a valid character.");
+                        isValid = false;
                     }
                 }
-            }
 
-            if (type == "text")
-            {
-                while (String.IsNullOrEmpty(entry))
+                if (isValid)
                 {
                     Console.Write(" Invalid entry, Please enter again: ");
-                    entry = Console.ReadLine();
+                    inputString = Console.ReadLine();
+                }
+                else { break; }
+            }
+            return inputString;
+        }
+        
+        public static string IsNumberValid(string inputString)
+        {
+            while (true)
+            {
+                bool isValid = true;
+                
+                if (inputString == "MENU")
+                {
+                    return inputString;
+                }
+                
+                if (String.IsNullOrEmpty(inputString))
+                {
+                    Console.WriteLine(" Null or Empty string is invalid.");
+                    isValid = false;
+                }
+                foreach(char c in inputString)
+                {
+                    if (!Char.IsDigit(c))
+                    {
+                        Console.WriteLine($" \"{c}\" is not a valid number.");
+                        isValid = false;
+                    }
+                }
+
+                if (!isValid)
+                {
+                    Console.Write(" Invalid entry, Please enter again: ");
+                    inputString = Console.ReadLine();
+                }
+                else { break; }
+            }
+            return inputString;
+        }
+
+        public static string IsDateValid(string inputString)
+        {
+            while (true)
+            {                
+                if (inputString == "MENU")
+                {
+                    return inputString;
+                }
+                else if (inputString == "NOW")
+                {
+                    DateTime today = DateTime.Now;
+                    return today.ToString();
+                }
+                
+                if (DateTime.TryParse(inputString, out DateTime date))
+                {
+                    return date.ToString();
+                }
+                else
+                {
+                    Console.Write(" Invalid date, Please enter again (DD/MM/YY HH:MM:SS): ");
+                    inputString = Console.ReadLine();
                 }
             }
-            return entry;
         }
     }
 }

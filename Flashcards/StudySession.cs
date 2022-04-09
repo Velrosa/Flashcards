@@ -14,7 +14,7 @@ namespace Flashcards
             // Pick a stack to study.
             UserInput.ShowTable("stack", false);
             Console.Write("Enter the name of a Stack to study: ");
-            string stack = Console.ReadLine();
+            string stack = Validation.IsStringValid(Console.ReadLine());
             
             // Fetch that stacks cards to display.
             List<Flashcard> cards = FlashcardController.GetStackSet(stack);
