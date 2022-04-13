@@ -9,15 +9,15 @@ namespace Flashcards
 {
     internal class StudySession
     {
-        public static void StartSession()
-        {
+        private FlashcardController controller = new FlashcardController();
+        public void StartSession()
+        {            
             // Pick a stack to study.
-            UserInput.ShowTable("stack", false);
             Console.Write(" Enter the name of a Stack to study: ");
             string stack = Validation.IsStringValid(Console.ReadLine());
             
             // Fetch that stacks cards to display.
-            List<Flashcard> cards = FlashcardController.GetStackSet(stack);
+            List<Flashcard> cards = controller.GetStackSet(stack);
 
             // If theres no cards in the stack, return to the menu.
             if (cards.Count == 0)
@@ -62,7 +62,7 @@ namespace Flashcards
             session.Score = score;
             session.outOf = cardTotal;
             
-            FlashcardController.InsertRow(session, "session");
+            controller.InsertRow(session, "session");
             Console.ReadKey();
         }
     }

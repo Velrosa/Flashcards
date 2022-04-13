@@ -10,8 +10,106 @@ namespace Flashcards
 {
     internal class UserInput
     {
+        private FlashcardController controller = new FlashcardController();
+        internal void MainMenu()
+        {
+            Console.Clear();
+
+            Console.WriteLine("\n MAIN MENU\n\n" +
+                                " What would you like to do?\n\n" +
+                                " Type 0 to Close Application.\n" +
+                                " Type 1 for Flashcards MENU.\n" +
+                                " Type 2 for Stacks MENU.\n" +
+                                " Type 3 to View a Stack of Cards.\n" +
+                                " Type 4 to Begin a Study Session.\n" +
+                                " Type 5 to Display Previous Sessions.\n" +
+                                " Type 6 to Display Yearly total for Sessions.\n" +
+                                " Type 7 to Remove a Session.\n");
+
+            // Users selection from the Menu.
+            string selector = Convert.ToString(Console.ReadKey(true).KeyChar);
+
+            switch (selector)
+            {
+                case "0":
+                    Environment.Exit(0);
+                    break;
+                case "1":
+                    SubMenu("card");
+                    break;
+                case "2":
+                    SubMenu("stack");
+                    break;
+                case "3":
+                    ShowTable("cardStack", true);
+                    break;
+                case "4":
+                    StudySession stdySession = new StudySession();
+                    ShowTable("stack", false);
+                    stdySession.StartSession();
+                    break;
+                case "5":
+                    ShowTable("session", true);
+                    break;
+                case "6":
+                    ShowTable("yearlySession", true);
+                    break;
+                case "7":
+                    DeleteView("session");
+                    break;
+                case "8":
+                    Console.WriteLine(DateTime.Now.ToString());
+                    Console.ReadKey();
+                    break;
+                default:
+                    Console.Write(" Invalid Entry. press any key to return... ");
+                    Console.ReadKey();
+                    break;
+            }
+        }
+
+        // SubMenus for Cards and Stacks.
+        internal void SubMenu(string type)
+        {
+            while (true)
+            {
+                Console.Clear();
+                Console.WriteLine($"\n {type.ToUpper()}S MENU\n");
+                Console.WriteLine(" What would you like to do?\n\n" +
+                                    " Type 0 to Return to MAIN MENU.\n" +
+                                    " Type 1 to View all {0}s.\n" +
+                                    " Type 2 to Add a {0}.\n" +
+                                    " Type 3 to Update a {0}.\n" +
+                                    " Type 4 to Delete a {0}.\n", type);
+
+                string selector = Convert.ToString(Console.ReadKey(true).KeyChar);
+
+                switch (selector)
+                {
+                    case "0":
+                        return;
+                    case "1":
+                        ShowTable(type, true);
+                        break;
+                    case "2":
+                        InsertView(type);
+                        break;
+                    case "3":
+                        UpdateView(type);
+                        break;
+                    case "4":
+                        DeleteView(type);
+                        break;
+                    default:
+                        Console.Write(" Invalid Entry. press any key to return... ");
+                        Console.ReadKey();
+                        break;
+                }
+            }
+        }
+
         // Displays a table with all the current records in.
-        public static void ShowTable(string type, bool pause)
+        internal void ShowTable(string type, bool pause)
         {
             Console.Clear();
 
@@ -33,7 +131,7 @@ namespace Flashcards
                     ConsoleTableBuilder.From(sessionList).ExportAndWriteLine();
                     break;
                 case "yearlySession":
-                    ConsoleTableBuilder.From(FlashcardController.GetMonthySessionData()).ExportAndWriteLine();
+                    ConsoleTableBuilder.From(controller.GetMonthySessionData()).ExportAndWriteLine();
                     break;
                 case "cardStack":
                     Console.Clear();
@@ -46,7 +144,7 @@ namespace Flashcards
 
                     Console.Clear();
                     Console.WriteLine("\n Displaying all records... \n");
-                    ConsoleTableBuilder.From(FlashcardController.GetStackSet(entry)).ExportAndWriteLine();
+                    ConsoleTableBuilder.From(controller.GetStackSet(entry)).ExportAndWriteLine();
                     break;
             }
 
@@ -58,7 +156,7 @@ namespace Flashcards
             }
         }
         // Used for Inserting records to the controller.
-        public static void InsertView(string type)
+        internal void InsertView(string type)
         {
             Console.Clear();
             Console.WriteLine($"\n Adding a new {type}...   \n Type MENU to return.");
@@ -82,11 +180,11 @@ namespace Flashcards
             card.StackName = Validation.IsStringValid(Console.ReadLine());
             if (card.StackName == "MENU") { return; }
 
-            FlashcardController.InsertRow(card, type);
+            controller.InsertRow(card, type);
 
         }
         // Used for Updating records to the controller.
-        public static void UpdateView(string type)
+        internal void UpdateView(string type)
         {
             ShowTable(type, false);
 
@@ -131,11 +229,11 @@ namespace Flashcards
                 if (card.NewName == "MENU") { return; }
             }
 
-            FlashcardController.UpdateRow(card, type);
+            controller.UpdateRow(card, type);
 
         }
         // Used to Delete records to the controller.
-        public static void DeleteView(string type)
+        internal void DeleteView(string type)
         {
             ShowTable(type, false);
 
@@ -164,7 +262,7 @@ namespace Flashcards
                 if (delete != "y") { return; }
             }
 
-            FlashcardController.DeleteRow(card, type);
+            controller.DeleteRow(card, type);
         }
     }
 }

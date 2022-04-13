@@ -13,10 +13,64 @@ namespace Flashcards
     internal class FlashcardController
     {
         // Connection string to Database.
-        private static string conString = ConfigurationManager.AppSettings.Get("conString");
+        private static readonly string conString = ConfigurationManager.AppSettings.Get("conString");
+        private static readonly string dbString = ConfigurationManager.AppSettings.Get("dbString");
 
+        public static void CreateDatabaseTables()
+        {
+            // Creates the Database if it doesnt exist.
+            using (var con = new SqlConnection(dbString))
+            {
+                using (var cmd = con.CreateCommand())
+                {
+                    con.Open();
+                    cmd.CommandText = "SELECT db_id('Flashcards')";
+                    bool state = cmd.ExecuteScalar() != DBNull.Value;
+
+                    if (!state)
+                    {
+                        cmd.CommandText = "CREATE DATABASE Flashcards";
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+
+            // Check if a tables exist in the database, if not create them.
+            using (var con = new SqlConnection(conString))
+            {
+                using (var cmd = con.CreateCommand())
+                {
+                    con.Open();
+                    cmd.CommandText = "IF NOT EXISTS (SELECT * FROM sysobjects WHERE id = object_id(N'[dbo].[Stacks]')" +
+                                            "AND OBJECTPROPERTY(id, N'IsUserTable') = 1)" +
+                                            "CREATE TABLE[dbo].[Stacks] (StackName VARCHAR(50) UNIQUE);";
+                    cmd.ExecuteNonQuery();
+                    cmd.CommandText = "IF NOT EXISTS (SELECT * FROM sysobjects WHERE id = object_id(N'[dbo].[Flashcards]')" +
+                                        "AND OBJECTPROPERTY(id, N'IsUserTable') = 1)" +
+                                        "CREATE TABLE[dbo].[Flashcards] (" +
+                                        "CardID INT IDENTITY(1,1) PRIMARY KEY," +
+                                        "CardQuestion TEXT," +
+                                        "CardAnswer TEXT," +
+                                        "StackName VARCHAR(50) FOREIGN KEY REFERENCES Stacks(StackName) " +
+                                        "ON DELETE CASCADE ON UPDATE CASCADE);";
+                    cmd.ExecuteNonQuery();
+                    cmd.CommandText = "IF NOT EXISTS (SELECT * FROM sysobjects WHERE id = object_id(N'[dbo].[Sessions]')" +
+                                        "AND OBJECTPROPERTY(id, N'IsUserTable') = 1)" +
+                                        "CREATE TABLE[dbo].[Sessions] (" +
+                                        "ID INT IDENTITY(1,1) PRIMARY KEY," +
+                                        "Date DATETIME," +
+                                        "Score INT," +
+                                        "outOf INT," +
+                                        "StackName VARCHAR(50) FOREIGN KEY REFERENCES Stacks(StackName) " +
+                                        "ON DELETE CASCADE ON UPDATE CASCADE);";
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+        
+        
         // Provided a Model and table name, returns a list of records to be displayed.
-        public List<T> Get<T>(string table)
+        internal List<T> Get<T>(string table)
         {
             List<T> list = new List<T>();
 
@@ -60,7 +114,7 @@ namespace Flashcards
         }
         
         // Fetchs all of a stack set to be displayed in study session.
-        public static List<Flashcard> GetStackSet(string stackName)
+        internal List<Flashcard> GetStackSet(string stackName)
         {
             List<Flashcard> tableData = new List<Flashcard>();
 
@@ -97,7 +151,7 @@ namespace Flashcards
             return tableData;
         }
         
-        public static List<YearlySession> GetMonthySessionData()
+        internal List<YearlySession> GetMonthySessionData()
         {
             List<YearlySession> tableData = new List<YearlySession>();
 
@@ -159,7 +213,7 @@ namespace Flashcards
         }
 
         // Inserts a row into the database using the DTO and the type of data.
-        public static void InsertRow(FlashcardDTO card, string type)
+        internal void InsertRow(FlashcardDTO card, string type)
         {
             using (var con = new SqlConnection(conString))
             {
@@ -199,7 +253,7 @@ namespace Flashcards
             }
         }
         // Updates a row in the database using the DTO and the type of data.
-        public static void UpdateRow(FlashcardDTO card, string type)
+        internal void UpdateRow(FlashcardDTO card, string type)
         {
             using (var con = new SqlConnection(conString))
             {
@@ -234,7 +288,7 @@ namespace Flashcards
             }
         }
         // Deletes a row in the database using the DTO and the type of data.
-        public static void DeleteRow(FlashcardDTO card, string type)
+        internal void DeleteRow(FlashcardDTO card, string type)
         {
             using (var con = new SqlConnection(conString))
             {
