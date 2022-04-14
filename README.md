@@ -2,7 +2,8 @@
 - A C# Console Application, Allows the user to study "Flashcards". 
 - User can create "Stacks" of "Cards" which have questions and answers belonging to them.
 - Stacks must have unique names, a Card must belong to a stack. If a Stack is deleted its Cards are also.
-- Stacks may be studied, you will recieve a score upon completetion.
+- Stacks may be studied in a "Session", you will recieve a score upon completetion.
+- All Study Sessions are saved and can be reviewed overall or yearly, if you delete a Stack its Sessions will also be removed.
 
 # Features
 
