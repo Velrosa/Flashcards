@@ -119,7 +119,7 @@ namespace Flashcards
             switch (type)
             {
                 case "card":
-                    var cardList = new FlashcardController().Get<Flashcard>("Flashcards");
+                    var cardList = new FlashcardController().Get<Flashcard>("Cards");
                     ConsoleTableBuilder.From(cardList).ExportAndWriteLine();
                     break;
                 case "stack":

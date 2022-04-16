@@ -41,28 +41,28 @@ namespace Flashcards
                 using (var cmd = con.CreateCommand())
                 {
                     con.Open();
-                    cmd.CommandText = "IF NOT EXISTS (SELECT * FROM sysobjects WHERE id = object_id(N'[dbo].[Stacks]')" +
-                                            "AND OBJECTPROPERTY(id, N'IsUserTable') = 1)" +
-                                            "CREATE TABLE[dbo].[Stacks] (StackName VARCHAR(50) UNIQUE);";
+                    cmd.CommandText = @"IF NOT EXISTS (SELECT * FROM sysobjects WHERE id = object_id(N'[dbo].[Stacks]')
+                                            AND OBJECTPROPERTY(id, N'IsUserTable') = 1)
+                                            CREATE TABLE[dbo].[Stacks] (StackName VARCHAR(50) UNIQUE);";
                     cmd.ExecuteNonQuery();
-                    cmd.CommandText = "IF NOT EXISTS (SELECT * FROM sysobjects WHERE id = object_id(N'[dbo].[Flashcards]')" +
-                                        "AND OBJECTPROPERTY(id, N'IsUserTable') = 1)" +
-                                        "CREATE TABLE[dbo].[Flashcards] (" +
-                                        "CardID INT IDENTITY(1,1) PRIMARY KEY," +
-                                        "CardQuestion TEXT," +
-                                        "CardAnswer TEXT," +
-                                        "StackName VARCHAR(50) FOREIGN KEY REFERENCES Stacks(StackName) " +
-                                        "ON DELETE CASCADE ON UPDATE CASCADE);";
+                    cmd.CommandText = @"IF NOT EXISTS (SELECT * FROM sysobjects WHERE id = object_id(N'[dbo].[Cards]')
+                                        AND OBJECTPROPERTY(id, N'IsUserTable') = 1)
+                                        CREATE TABLE[dbo].[Cards] (
+                                        CardID INT IDENTITY(1,1) PRIMARY KEY,
+                                        CardQuestion TEXT,
+                                        CardAnswer TEXT,
+                                        StackName VARCHAR(50) FOREIGN KEY REFERENCES Stacks(StackName) 
+                                        ON DELETE CASCADE ON UPDATE CASCADE);";
                     cmd.ExecuteNonQuery();
-                    cmd.CommandText = "IF NOT EXISTS (SELECT * FROM sysobjects WHERE id = object_id(N'[dbo].[Sessions]')" +
-                                        "AND OBJECTPROPERTY(id, N'IsUserTable') = 1)" +
-                                        "CREATE TABLE[dbo].[Sessions] (" +
-                                        "ID INT IDENTITY(1,1) PRIMARY KEY," +
-                                        "Date DATETIME," +
-                                        "Score INT," +
-                                        "outOf INT," +
-                                        "StackName VARCHAR(50) FOREIGN KEY REFERENCES Stacks(StackName) " +
-                                        "ON DELETE CASCADE ON UPDATE CASCADE);";
+                    cmd.CommandText = @"IF NOT EXISTS (SELECT * FROM sysobjects WHERE id = object_id(N'[dbo].[Sessions]')
+                                        AND OBJECTPROPERTY(id, N'IsUserTable') = 1)
+                                        CREATE TABLE[dbo].[Sessions] (
+                                        ID INT IDENTITY(1,1) PRIMARY KEY,
+                                        Date DATETIME,
+                                        Score INT,
+                                        outOf INT,
+                                        StackName VARCHAR(50) FOREIGN KEY REFERENCES Stacks(StackName)
+                                        ON DELETE CASCADE ON UPDATE CASCADE);";
                     cmd.ExecuteNonQuery();
                 }
             }
@@ -123,7 +123,7 @@ namespace Flashcards
                 using (var cmd = con.CreateCommand())
                 {
                     con.Open();
-                    cmd.CommandText = "SELECT * FROM Flashcards WHERE StackName=(@stackName)";
+                    cmd.CommandText = "SELECT * FROM Cards WHERE StackName=(@stackName)";
                     cmd.Parameters.AddWithValue("@stackName", stackName);
 
                     using (var reader = cmd.ExecuteReader())
@@ -160,23 +160,23 @@ namespace Flashcards
                 using (var cmd = con.CreateCommand())
                 {
                     con.Open();
-                    cmd.CommandText = "SELECT [StackName]," +
-                        "ISNULL([1], 0) AS Jan," +
-                        "ISNULL([2], 0) AS Feb," +
-                        "ISNULL([3], 0) AS Mar," +
-                        "ISNULL([4], 0) AS Apr," +
-                        "ISNULL([5], 0) AS May," +
-                        "ISNULL([6], 0) AS Jun," +
-                        "ISNULL([7], 0) AS Jul," +
-                        "ISNULL([8], 0) AS Aug," +
-                        "ISNULL([9], 0) AS Sep," +
-                        "ISNULL([10], 0) AS Oct," +
-                        "ISNULL([11], 0) AS Nov," +
-                        "ISNULL([12], 0) AS Dec " +
-                        "FROM (SELECT [StackName], MONTH([Date]) AS [Month], Score FROM dbo.Sessions) AS D " +
-                        "PIVOT (SUM(Score) FOR [Month] IN (" +
-                        "[1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12]" +
-                        ")) AS P";
+                    cmd.CommandText = @"SELECT [StackName],
+                        ISNULL([1], 0) AS Jan,
+                        ISNULL([2], 0) AS Feb,
+                        ISNULL([3], 0) AS Mar,
+                        ISNULL([4], 0) AS Apr,
+                        ISNULL([5], 0) AS May,
+                        ISNULL([6], 0) AS Jun,
+                        ISNULL([7], 0) AS Jul,
+                        ISNULL([8], 0) AS Aug,
+                        ISNULL([9], 0) AS Sep,
+                        ISNULL([10], 0) AS Oct,
+                        ISNULL([11], 0) AS Nov,
+                        ISNULL([12], 0) AS Dec
+                        FROM (SELECT [StackName], MONTH([Date]) AS [Month], Score FROM dbo.Sessions) AS D 
+                        PIVOT (SUM(Score) FOR [Month] IN (
+                        [1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12]
+                        )) AS P";
 
                     using (var reader = cmd.ExecuteReader())
                     {
@@ -222,7 +222,7 @@ namespace Flashcards
                     con.Open();
                     if (type == "card")
                     {
-                        cmd.CommandText = "INSERT INTO Flashcards (CardQuestion, CardAnswer, StackName) VALUES (@question, @answer, @stackname)";
+                        cmd.CommandText = "INSERT INTO Cards (CardQuestion, CardAnswer, StackName) VALUES (@question, @answer, @stackname)";
                         cmd.Parameters.AddWithValue("@question", card.Question);
                         cmd.Parameters.AddWithValue("@answer", card.Answer);
                     }
@@ -262,7 +262,7 @@ namespace Flashcards
                     con.Open();
                     if (type == "card")
                     {
-                        cmd.CommandText = "UPDATE Flashcards SET CardQuestion=(@question), CardAnswer=(@answer), StackName=(@stackName) WHERE CardID=(@id) ";
+                        cmd.CommandText = "UPDATE Cards SET CardQuestion=(@question), CardAnswer=(@answer), StackName=(@stackName) WHERE CardID=(@id) ";
                         cmd.Parameters.AddWithValue("@id", card.ID);
                         cmd.Parameters.AddWithValue("@question", card.Question);
                         cmd.Parameters.AddWithValue("@answer", card.Answer);
@@ -297,7 +297,7 @@ namespace Flashcards
                     con.Open();
                     if (type == "card")
                     {
-                        cmd.CommandText = "DELETE FROM Flashcards WHERE CardID=(@Id)";
+                        cmd.CommandText = "DELETE FROM Cards WHERE CardID=(@Id)";
                         cmd.Parameters.AddWithValue("@Id", card.ID);
                     }
                     else if (type == "stack")
